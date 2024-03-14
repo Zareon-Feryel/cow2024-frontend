@@ -1,21 +1,20 @@
 {
-  "runtime": "Default",
-  "defaultVariables": null,
-  "documentGenerator": {
-    "fromDocument": {
-      "json": "{\r\n  \"openapi\": \"3.0.0\",\r\n  \"info\": {\r\n    \"title\": \"Cow2024 API\",\r\n    \"description\": \"Add your description\",\r\n    \"termsOfService\": \"\",\r\n    \"version\": \"1.0.0\"\r\n  },\r\n  \"servers\": [],\r\n  \"components\": {\r\n    \"schemas\": {\r\n      \"BaseResponse\": {\r\n        \"description\": \"TO COPY IN EACH RESPONSE FILE\",\r\n        \"required\": [\r\n          \"success\"\r\n        ],\r\n        \"type\": \"object\",\r\n        \"properties\": {\r\n          \"success\": {\r\n            \"description\": \"success\",\r\n            \"type\": \"boolean\"\r\n          },\r\n          \"statusCode\": {\r\n            \"description\": \"statusCode\",\r\n            \"type\": \"number\",\r\n            \"nullable\": true\r\n          },\r\n          \"result\": {\r\n            \"description\": \"result\",\r\n            \"type\": \"object\",\r\n            \"nullable\": true\r\n          }\r\n        }\r\n      },\r\n      \"SuccessResponse\": {\r\n        \"description\": \"SuccessReponse\",\r\n        \"required\": [\r\n          \"success\"\r\n        ],\r\n        \"type\": \"object\",\r\n        \"properties\": {\r\n          \"success\": {\r\n            \"description\": \"success\",\r\n            \"type\": \"boolean\"\r\n          },\r\n          \"statusCode\": {\r\n            \"description\": \"statusCode\",\r\n            \"type\": \"number\",\r\n            \"nullable\": true\r\n          }\r\n        }\r\n      },\r\n      \"ErrorResponse\": {\r\n        \"description\": \"ErrorResponse\",\r\n        \"required\": [\r\n          \"success\"\r\n        ],\r\n        \"type\": \"object\",\r\n        \"properties\": {\r\n          \"success\": {\r\n            \"description\": \"success\",\r\n            \"type\": \"boolean\"\r\n          },\r\n          \"error\": {\r\n            \"description\": \"error\",\r\n            \"oneOf\": [\r\n              {\r\n                \"type\": \"string\"\r\n              },\r\n              {\r\n                \"type\": \"array\",\r\n                \"items\": {\r\n                  \"type\": \"string\"\r\n                }\r\n              }\r\n            ],\r\n            \"nullable\": true\r\n          },\r\n          \"statusCode\": {\r\n            \"description\": \"statusCode\",\r\n            \"type\": \"number\",\r\n            \"nullable\": true\r\n          }\r\n        }\r\n      },\r\n      \"GetUser\": {\r\n        \"description\": \"\",\r\n        \"required\": [\r\n          \"id\",\r\n          \"name\",\r\n          \"email\"\r\n        ],\r\n        \"type\": \"object\",\r\n        \"properties\": {\r\n          \"id\": {\r\n            \"description\": \"id\",\r\n            \"type\": \"number\"\r\n          },\r\n          \"name\": {\r\n            \"description\": \"name\",\r\n            \"type\": \"string\"\r\n          },\r\n          \"email\": {\r\n            \"description\": \"email\",\r\n            \"type\": \"string\"\r\n          }\r\n        }\r\n      },\r\n      \"GetUserResponse\": {\r\n        \"description\": \"\",\r\n        \"required\": [\r\n          \"success\"\r\n        ],\r\n        \"type\": \"object\",\r\n        \"properties\": {\r\n          \"success\": {\r\n            \"description\": \"success\",\r\n            \"type\": \"boolean\"\r\n          },\r\n          \"statusCode\": {\r\n            \"description\": \"statusCode\",\r\n            \"type\": \"number\",\r\n            \"nullable\": true\r\n          },\r\n          \"result\": {\r\n            \"description\": \"result\",\r\n            \"$ref\": \"#/components/schemas/GetUser\",\r\n            \"nullable\": true\r\n          }\r\n        }\r\n      },\r\n      \"GetUsersResponse\": {\r\n        \"description\": \"\",\r\n        \"type\": \"object\",\r\n        \"properties\": {\r\n          \"success\": {\r\n            \"description\": \"success\",\r\n            \"type\": \"boolean\",\r\n            \"nullable\": true\r\n          },\r\n          \"statusCode\": {\r\n            \"description\": \"statusCode\",\r\n            \"type\": \"number\",\r\n            \"nullable\": true\r\n          },\r\n          \"result\": {\r\n            \"description\": \"result\",\r\n            \"type\": \"array\",\r\n            \"items\": {\r\n              \"$ref\": \"#/components/schemas/GetUser\"\r\n            },\r\n            \"nullable\": true\r\n          }\r\n        }\r\n      },\r\n      \"SignUpRequest\": {\r\n        \"description\": \"Request for sign up\",\r\n        \"required\": [\r\n          \"firstName\",\r\n          \"lastName\",\r\n          \"username\",\r\n          \"email\",\r\n          \"password\"\r\n        ],\r\n        \"type\": \"object\",\r\n        \"properties\": {\r\n          \"firstName\": {\r\n            \"description\": \"First name\",\r\n            \"type\": \"string\"\r\n          },\r\n          \"lastName\": {\r\n            \"description\": \"Last name\",\r\n            \"type\": \"string\"\r\n          },\r\n          \"username\": {\r\n            \"description\": \"Username\",\r\n            \"type\": \"string\"\r\n          },\r\n          \"email\": {\r\n            \"description\": \"Email\",\r\n            \"type\": \"string\"\r\n          },\r\n          \"password\": {\r\n            \"description\": \"Password\",\r\n            \"type\": \"string\"\r\n          }\r\n        }\r\n      },\r\n      \"SignInRequest\": {\r\n        \"description\": \"Request to sign in\",\r\n        \"required\": [\r\n          \"username\",\r\n          \"password\"\r\n        ],\r\n        \"type\": \"object\",\r\n        \"properties\": {\r\n          \"username\": {\r\n            \"description\": \"The username\",\r\n            \"type\": \"string\"\r\n          },\r\n          \"password\": {\r\n            \"description\": \"The password\",\r\n            \"type\": \"string\"\r\n          }\r\n        }\r\n      },\r\n      \"SignIn\": {\r\n        \"description\": \"\",\r\n        \"type\": \"object\",\r\n        \"properties\": {\r\n          \"id\": {\r\n            \"description\": \"The id of the user\",\r\n            \"type\": \"number\",\r\n            \"nullable\": true\r\n          },\r\n          \"username\": {\r\n            \"description\": \"The username of the user\",\r\n            \"type\": \"string\",\r\n            \"nullable\": true\r\n          },\r\n          \"email\": {\r\n            \"description\": \"The email of the user\",\r\n            \"type\": \"string\",\r\n            \"nullable\": true\r\n          }\r\n        }\r\n      },\r\n      \"SignInResponse\": {\r\n        \"description\": \"Response to sign in\",\r\n        \"type\": \"object\",\r\n        \"properties\": {\r\n          \"success\": {\r\n            \"description\": \"success\",\r\n            \"type\": \"boolean\",\r\n            \"nullable\": true\r\n          },\r\n          \"statusCode\": {\r\n            \"description\": \"statusCode\",\r\n            \"type\": \"number\",\r\n            \"nullable\": true\r\n          },\r\n          \"result\": {\r\n            \"description\": \"result\",\r\n            \"$ref\": \"#/components/schemas/SignIn\",\r\n            \"nullable\": true\r\n          }\r\n        }\r\n      }\r\n    }\r\n  },\r\n  \"paths\": {\r\n    \"/api/users\": {\r\n      \"get\": {\r\n        \"deprecated\": false,\r\n        \"summary\": \"Get all users\",\r\n        \"security\": [],\r\n        \"responses\": {\r\n          \"200\": {\r\n            \"description\": \"success response\",\r\n            \"content\": {\r\n              \"application/json\": {\r\n                \"schema\": {\r\n                  \"$ref\": \"#/components/schemas/GetUsersResponse\"\r\n                }\r\n              }\r\n            }\r\n          }\r\n        },\r\n        \"parameters\": [],\r\n        \"tags\": [\r\n          \"Users\"\r\n        ]\r\n      }\r\n    },\r\n    \"/api/users/{id}\": {\r\n      \"get\": {\r\n        \"deprecated\": false,\r\n        \"summary\": \"Get user by id\",\r\n        \"security\": [],\r\n        \"responses\": {\r\n          \"200\": {\r\n            \"description\": \"success response\",\r\n            \"content\": {\r\n              \"application/json\": {\r\n                \"schema\": {\r\n                  \"$ref\": \"#/components/schemas/GetUserResponse\"\r\n                }\r\n              }\r\n            }\r\n          },\r\n          \"404\": {\r\n            \"description\": \"not found\",\r\n            \"content\": {\r\n              \"application/json\": {\r\n                \"schema\": {\r\n                  \"$ref\": \"#/components/schemas/ErrorResponse\"\r\n                }\r\n              }\r\n            }\r\n          }\r\n        },\r\n        \"parameters\": [\r\n          {\r\n            \"name\": \"id\",\r\n            \"in\": \"path\",\r\n            \"description\": \"id\",\r\n            \"required\": true,\r\n            \"deprecated\": false,\r\n            \"schema\": {\r\n              \"type\": \"number\"\r\n            }\r\n          }\r\n        ],\r\n        \"tags\": [\r\n          \"Users\"\r\n        ]\r\n      }\r\n    },\r\n    \"/api/users/signup\": {\r\n      \"post\": {\r\n        \"deprecated\": false,\r\n        \"summary\": \"Signup user\",\r\n        \"security\": [],\r\n        \"responses\": {\r\n          \"201\": {\r\n            \"description\": \"success response\",\r\n            \"content\": {\r\n              \"application/json\": {\r\n                \"schema\": {\r\n                  \"$ref\": \"#/components/schemas/SuccessResponse\"\r\n                }\r\n              }\r\n            }\r\n          },\r\n          \"400\": {\r\n            \"description\": \"bad request\",\r\n            \"content\": {\r\n              \"application/json\": {\r\n                \"schema\": {\r\n                  \"$ref\": \"#/components/schemas/ErrorResponse\"\r\n                }\r\n              }\r\n            }\r\n          }\r\n        },\r\n        \"parameters\": [],\r\n        \"tags\": [\r\n          \"Users\"\r\n        ],\r\n        \"requestBody\": {\r\n          \"content\": {\r\n            \"application/json\": {\r\n              \"schema\": {\r\n                \"$ref\": \"#/components/schemas/SignUpRequest\"\r\n              },\r\n              \"examples\": {\r\n                \"example1\": {\r\n                  \"summary\": \"Signup user\",\r\n                  \"value\": \"{\\n\\\"firstName\\\": \\\"John\\\",\\n\\\"lastName\\\": \\\"Doe\\\",\\n\\\"username\\\": \\\"johnDoe\\\",\\n\\\"email\\\": \\\"john.doe@hotmail.com\\\",\\n\\\"password\\\": \\\"Azerty123\\\"\\n}\"\r\n                }\r\n              }\r\n            }\r\n          },\r\n          \"description\": \"Signup request\",\r\n          \"required\": true\r\n        }\r\n      }\r\n    },\r\n    \"/api/users/signin\": {\r\n      \"post\": {\r\n        \"deprecated\": false,\r\n        \"summary\": \"Signin user\",\r\n        \"security\": [],\r\n        \"responses\": {\r\n          \"200\": {\r\n            \"description\": \"success response\",\r\n            \"content\": {\r\n              \"application/json\": {\r\n                \"schema\": {\r\n                  \"$ref\": \"#/components/schemas/SignInResponse\"\r\n                }\r\n              }\r\n            }\r\n          },\r\n          \"400\": {\r\n            \"description\": \"bad request\",\r\n            \"content\": {\r\n              \"application/json\": {\r\n                \"schema\": {\r\n                  \"$ref\": \"#/components/schemas/ErrorResponse\"\r\n                }\r\n              }\r\n            }\r\n          }\r\n        },\r\n        \"parameters\": [],\r\n        \"tags\": [\r\n          \"Users\"\r\n        ],\r\n        \"requestBody\": {\r\n          \"content\": {\r\n            \"application/json\": {\r\n              \"schema\": {\r\n                \"$ref\": \"#/components/schemas/SignInRequest\"\r\n              },\r\n              \"examples\": {\r\n                \"example1\": {\r\n                  \"summary\": \"Signin user\",\r\n                  \"value\": \"{\\n\\\"username\\\": \\\"johnDoe\\\",\\n\\\"password\\\":\\\"Azerty123\\\"\\n}\"\r\n                }\r\n              }\r\n            }\r\n          },\r\n          \"description\": \"Signin request\",\r\n          \"required\": true\r\n        }\r\n      }\r\n    },\r\n    \"/api/users/logout\": {\r\n      \"post\": {\r\n        \"deprecated\": false,\r\n        \"summary\": \"Logout user\",\r\n        \"security\": [],\r\n        \"responses\": {\r\n          \"200\": {\r\n            \"description\": \"success response\",\r\n            \"content\": {\r\n              \"application/json\": {\r\n                \"schema\": {\r\n                  \"$ref\": \"#/components/schemas/SuccessResponse\"\r\n                }\r\n              }\r\n            }\r\n          }\r\n        },\r\n        \"parameters\": [],\r\n        \"tags\": [\r\n          \"Users\"\r\n        ]\r\n      }\r\n    }\r\n  },\r\n  \"tags\": [\r\n    {\r\n      \"name\": \"Users\",\r\n      \"description\": \"\"\r\n    }\r\n  ]\r\n}",
-      "url": "https://cow2024-backend-theta.vercel.app/api/v1/swagger.json",
-      "output": null,
-      "newLineBehavior": "Auto"
-    }
-  },
-  "codeGenerators": {
-    "openApiToTypeScriptClient": {
+	"runtime": "Default",
+	"defaultVariables": null,
+	"documentGenerator": {
+		"fromDocument": {
+			"url": "https://cow2024-backend-theta.vercel.app/api/v1/swagger.json",
+			"output": null,
+			"newLineBehavior": "Auto"
+		}
+	},
+	"codeGenerators": {
+		"openApiToTypeScriptClient": {
       "className": "{controller}",
       "moduleName": "",
       "namespace": "",
-      "typeScriptVersion": 2.7,
-      "template": "Fetch",
+      "typeScriptVersion": 4.3,
+      "template": "Axios",
       "promiseType": "Promise",
       "httpClass": "HttpClient",
       "withCredentials": false,
@@ -30,18 +29,18 @@
       "exportTypes": true,
       "wrapDtoExceptions": false,
       "exceptionClass": "ApiException",
-      "clientBaseClass": null,
+      "clientBaseClass": "BaseApi",
       "wrapResponses": false,
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
       "protectedMethods": [],
-      "configurationClass": null,
-      "useTransformOptionsMethod": false,
-      "useTransformResultMethod": false,
+      "configurationClass": "",
+      "useTransformOptionsMethod": true,
+      "useTransformResultMethod": true,
       "generateDtoTypes": true,
-      "operationGenerationMode": "MultipleClientsFromFirstTagAndPathSegments",
-      "markOptionalProperties": true,
+      "operationGenerationMode": "MultipleClientsFromOperationId",
+      "markOptionalProperties": false,
       "generateCloneMethod": false,
       "typeStyle": "Class",
       "enumStyle": "Enum",
@@ -57,21 +56,21 @@
       "generateConstructorInterface": true,
       "convertConstructorInterfaceData": false,
       "importRequiredTypes": true,
-      "useGetBaseUrlMethod": false,
+      "useGetBaseUrlMethod": true,
       "baseUrlTokenName": "API_BASE_URL",
       "queryNullValue": "",
       "useAbortSignal": false,
       "inlineNamedDictionaries": false,
       "inlineNamedAny": false,
       "includeHttpContext": false,
-      "templateDirectory": null,
+      "templateDirectory": "templates",
       "typeNameGeneratorType": null,
       "propertyNameGeneratorType": null,
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "nswag-generated-file.ts",
-      "newLineBehavior": "Auto"
-    }
-  }
+			"output": "nswag-generated-file.ts",
+			"newLineBehavior": "Auto"
+		}
+	}
 }
