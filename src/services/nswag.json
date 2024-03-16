@@ -1,16 +1,16 @@
 {
-	"runtime": "Default",
-	"defaultVariables": null,
-	"documentGenerator": {
-		"fromDocument": {
-			"url": "https://cow2024-backend-theta.vercel.app/api/v1/swagger.json",
-			"output": null,
-			"newLineBehavior": "Auto"
-		}
-	},
-	"codeGenerators": {
-		"openApiToTypeScriptClient": {
-      "className": "{controller}",
+  "runtime": "Default",
+  "defaultVariables": null,
+  "documentGenerator": {
+    "fromDocument": {
+      "url": "https://cow2024-backend-theta.vercel.app/api/v1/swagger.json",
+      "output": null,
+      "newLineBehavior": "Auto"
+    }
+  },
+  "codeGenerators": {
+    "openApiToTypeScriptClient": {
+      "className": "{controller}Repository",
       "moduleName": "",
       "namespace": "",
       "typeScriptVersion": 4.3,
@@ -39,7 +39,7 @@
       "useTransformOptionsMethod": true,
       "useTransformResultMethod": true,
       "generateDtoTypes": true,
-      "operationGenerationMode": "MultipleClientsFromOperationId",
+      "operationGenerationMode": "MultipleClientsFromFirstTagAndOperationId",
       "markOptionalProperties": false,
       "generateCloneMethod": false,
       "typeStyle": "Class",
@@ -69,8 +69,8 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-			"output": "nswag-generated-file.ts",
-			"newLineBehavior": "Auto"
-		}
-	}
+      "output": "nswag-generated-file.ts",
+      "newLineBehavior": "Auto"
+    }
+  }
 }

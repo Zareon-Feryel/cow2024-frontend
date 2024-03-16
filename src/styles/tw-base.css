@@ -1,0 +1,5 @@
+@layer components {
+    .container {
+        @apply bg-white rounded-xl shadow p-2
+    }
+}
