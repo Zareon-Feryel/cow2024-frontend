@@ -16,7 +16,7 @@ const params = queryString.default.stringify({
 export default function GithubButton () {
     const user = getCurrentUser();
     const [searchParams] = useSearchParams();
-    const toast = useToast();
+    const { toast } = useToast();
     
     useEffect(() => {
         const githubCode = searchParams.get(GITHUB_CODE_KEY);
