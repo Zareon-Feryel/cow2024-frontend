@@ -13,8 +13,10 @@ export function MakerPage () {
     const navigate = useNavigate();
     
     useEffect(() => {
-        if (!makerId) return;
-        new MakersService().makers2(makerId).then((res) => {
+        const makerIdNumber = Number(makerId);
+        if (!isNaN(makerIdNumber)) return;
+        
+        new MakersService().makers2(makerIdNumber).then((res) => {
             console.log(res.result);
             setMaker(res.result);
         });
@@ -24,7 +26,7 @@ export function MakerPage () {
         <div className="main-container h-full">
             <div className="border-b-2 flex flex-col">
                 <h1 className="main-title">{maker?.name}</h1>
-                <h3 className="self-center">{`Nombre de projet${maker?.projects?.length > 1 ? 's' : ''}: ${maker?.projects?.length}`}</h3>
+                <h3 className="self-center">{`Nombre de projet${(maker?.projects && maker.projects.length > 1) ? 's' : ''}: ${maker?.projects?.length}`}</h3>
                 <div>
                     <h3 className="font-semibold">Coordonnées</h3>
                     <p>{maker?.street}, {maker?.streetNumber}</p>
@@ -38,9 +40,9 @@ export function MakerPage () {
             <div>
                 <h2 className="main-title">Projets</h2>
                 {maker?.projects?.map((project, index) => (
-                    <div key={getUniqueID(project.name, index)}>
+                    <div key={getUniqueID(project?.name ?? 'project', index)}>
                         <h2 className="uppercase font-semibold text-lg">{project.name}</h2>
-                        {project?.images?.length > 0 ? project.images?.map((image, index) => (
+                        {(project?.images && project.images.length > 0) ? project.images?.map((image, index) => (
                                 <img key={getUniqueID(image, index)} src={image} alt={project.name}/>
                             ))
                             : 'Pas d\'images pour ce projet.'}
