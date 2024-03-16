@@ -14,7 +14,7 @@ import { BaseApi } from "./BaseApi";
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-export class  extends BaseApi {
+export class MakersRepository extends BaseApi {
     protected instance: AxiosInstance;
     protected baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -30,17 +30,22 @@ export class  extends BaseApi {
     }
 
     /**
-     * Get all users
+     * Set github link
+     * @param body Set github link request
      * @return success response
      */
-    users( cancelToken?: CancelToken): Promise<GetUsersResponse> {
-        let url_ = this.baseUrl + "/api/users";
+    updateGithubLink(body: SetLinkRequest, cancelToken?: CancelToken): Promise<SuccessResponse> {
+        let url_ = this.baseUrl + "/api/maker/updateGithubLink";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_: AxiosRequestConfig = {
-            method: "GET",
+            data: content_,
+            method: "PUT",
             url: url_,
             headers: {
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             },
             cancelToken
@@ -55,11 +60,11 @@ export class  extends BaseApi {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processUsers(_response));
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processUpdateGithubLink(_response));
         });
     }
 
-    protected processUsers(response: AxiosResponse): Promise<GetUsersResponse> {
+    protected processUpdateGithubLink(response: AxiosResponse): Promise<SuccessResponse> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -73,79 +78,30 @@ export class  extends BaseApi {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = GetUsersResponse.fromJS(resultData200);
-            return Promise.resolve<GetUsersResponse>(result200);
+            result200 = SuccessResponse.fromJS(resultData200);
+            return Promise.resolve<SuccessResponse>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<GetUsersResponse>(null as any);
+        return Promise.resolve<SuccessResponse>(null as any);
     }
+}
 
-    /**
-     * Get user by id
-     * @param id id
-     * @return success response
-     */
-    users2(id: number, cancelToken?: CancelToken): Promise<GetUserResponse> {
-        let url_ = this.baseUrl + "/api/users/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
+export class UsersRepository extends BaseApi {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
 
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.instance.request(transformedOptions_);
-        }).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processUsers2(_response));
-        });
-    }
+        super();
 
-    protected processUsers2(response: AxiosResponse): Promise<GetUserResponse> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = GetUserResponse.fromJS(resultData200);
-            return Promise.resolve<GetUserResponse>(result200);
+        this.instance = instance || axios.create();
 
-        } else if (status === 404) {
-            const _responseText = response.data;
-            let result404: any = null;
-            let resultData404  = _responseText;
-            result404 = ErrorResponse.fromJS(resultData404);
-            return throwException("not found", status, _responseText, _headers, result404);
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
 
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<GetUserResponse>(null as any);
     }
 
     /**
@@ -153,7 +109,7 @@ export class  extends BaseApi {
      * @param body Signup request
      * @return success response
      */
-    signup(body: SignUpRequest, cancelToken?: CancelToken): Promise<SuccessResponse> {
+    signup(body: SignUpRequest, cancelToken?: CancelToken): Promise<GetMeResponse> {
         let url_ = this.baseUrl + "/api/users/signup";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -183,7 +139,7 @@ export class  extends BaseApi {
         });
     }
 
-    protected processSignup(response: AxiosResponse): Promise<SuccessResponse> {
+    protected processSignup(response: AxiosResponse): Promise<GetMeResponse> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -197,8 +153,8 @@ export class  extends BaseApi {
             const _responseText = response.data;
             let result201: any = null;
             let resultData201  = _responseText;
-            result201 = SuccessResponse.fromJS(resultData201);
-            return Promise.resolve<SuccessResponse>(result201);
+            result201 = GetMeResponse.fromJS(resultData201);
+            return Promise.resolve<GetMeResponse>(result201);
 
         } else if (status === 400) {
             const _responseText = response.data;
@@ -211,7 +167,7 @@ export class  extends BaseApi {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<SuccessResponse>(null as any);
+        return Promise.resolve<GetMeResponse>(null as any);
     }
 
     /**
@@ -219,7 +175,7 @@ export class  extends BaseApi {
      * @param body Signin request
      * @return success response
      */
-    signin(body: SignInRequest, cancelToken?: CancelToken): Promise<SignInResponse> {
+    signin(body: SignInRequest, cancelToken?: CancelToken): Promise<GetMeResponse> {
         let url_ = this.baseUrl + "/api/users/signin";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -249,7 +205,7 @@ export class  extends BaseApi {
         });
     }
 
-    protected processSignin(response: AxiosResponse): Promise<SignInResponse> {
+    protected processSignin(response: AxiosResponse): Promise<GetMeResponse> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -263,8 +219,8 @@ export class  extends BaseApi {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = SignInResponse.fromJS(resultData200);
-            return Promise.resolve<SignInResponse>(result200);
+            result200 = GetMeResponse.fromJS(resultData200);
+            return Promise.resolve<GetMeResponse>(result200);
 
         } else if (status === 400) {
             const _responseText = response.data;
@@ -277,7 +233,68 @@ export class  extends BaseApi {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<SignInResponse>(null as any);
+        return Promise.resolve<GetMeResponse>(null as any);
+    }
+
+    /**
+     * Get user informations
+     * @return success response
+     */
+    me( cancelToken?: CancelToken): Promise<GetMeResponse> {
+        let url_ = this.baseUrl + "/api/users/me";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processMe(_response));
+        });
+    }
+
+    protected processMe(response: AxiosResponse): Promise<GetMeResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = GetMeResponse.fromJS(resultData200);
+            return Promise.resolve<GetMeResponse>(result200);
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ErrorResponse.fromJS(resultData400);
+            return throwException("bad request", status, _responseText, _headers, result400);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GetMeResponse>(null as any);
     }
 
     /**
@@ -289,7 +306,7 @@ export class  extends BaseApi {
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
-            method: "POST",
+            method: "GET",
             url: url_,
             headers: {
                 "Accept": "application/json"
@@ -521,17 +538,14 @@ export interface IErrorResponse {
     [key: string]: any;
 }
 
-export class GetUser implements IGetUser {
-    /** id */
-    id!: number;
-    /** name */
-    name!: string;
-    /** email */
-    email!: string;
+/** request for set link */
+export class SetLinkRequest implements ISetLinkRequest {
+    /** github link */
+    githubLink!: string;
 
     [key: string]: any;
 
-    constructor(data?: IGetUser) {
+    constructor(data?: ISetLinkRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -546,15 +560,13 @@ export class GetUser implements IGetUser {
                 if (_data.hasOwnProperty(property))
                     this[property] = _data[property];
             }
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.email = _data["email"];
+            this.githubLink = _data["githubLink"];
         }
     }
 
-    static fromJS(data: any): GetUser {
+    static fromJS(data: any): SetLinkRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new GetUser();
+        let result = new SetLinkRequest();
         result.init(data);
         return result;
     }
@@ -565,152 +577,15 @@ export class GetUser implements IGetUser {
             if (this.hasOwnProperty(property))
                 data[property] = this[property];
         }
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["email"] = this.email;
+        data["githubLink"] = this.githubLink;
         return data;
     }
 }
 
-export interface IGetUser {
-    /** id */
-    id: number;
-    /** name */
-    name: string;
-    /** email */
-    email: string;
-
-    [key: string]: any;
-}
-
-export class GetUserResponse implements IGetUserResponse {
-    /** success */
-    success!: boolean;
-    /** statusCode */
-    statusCode!: number | undefined;
-    /** result */
-    result!: GetUser | undefined;
-
-    [key: string]: any;
-
-    constructor(data?: IGetUserResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-            this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
-            this.result = _data["result"] ? GetUser.fromJS(_data["result"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): GetUserResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetUserResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
-        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IGetUserResponse {
-    /** success */
-    success: boolean;
-    /** statusCode */
-    statusCode: number | undefined;
-    /** result */
-    result: GetUser | undefined;
-
-    [key: string]: any;
-}
-
-export class GetUsersResponse implements IGetUsersResponse {
-    /** success */
-    success!: boolean | undefined;
-    /** statusCode */
-    statusCode!: number | undefined;
-    /** result */
-    result!: GetUser[] | undefined;
-
-    [key: string]: any;
-
-    constructor(data?: IGetUsersResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-            this.success = _data["success"];
-            this.statusCode = _data["statusCode"];
-            if (Array.isArray(_data["result"])) {
-                this.result = [] as any;
-                for (let item of _data["result"])
-                    this.result!.push(GetUser.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): GetUsersResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetUsersResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        data["success"] = this.success;
-        data["statusCode"] = this.statusCode;
-        if (Array.isArray(this.result)) {
-            data["result"] = [];
-            for (let item of this.result)
-                data["result"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IGetUsersResponse {
-    /** success */
-    success: boolean | undefined;
-    /** statusCode */
-    statusCode: number | undefined;
-    /** result */
-    result: GetUser[] | undefined;
+/** request for set link */
+export interface ISetLinkRequest {
+    /** github link */
+    githubLink: string;
 
     [key: string]: any;
 }
@@ -721,12 +596,12 @@ export class SignUpRequest implements ISignUpRequest {
     firstName!: string;
     /** Last name */
     lastName!: string;
-    /** Username */
-    username!: string;
     /** Email */
     email!: string;
     /** Password */
     password!: string;
+    /** Role */
+    role!: number | undefined;
 
     [key: string]: any;
 
@@ -745,11 +620,11 @@ export class SignUpRequest implements ISignUpRequest {
                 if (_data.hasOwnProperty(property))
                     this[property] = _data[property];
             }
-            this.firstName = _data["firstName"];
+            this.firstName = _data["FirstName"];
             this.lastName = _data["lastName"];
-            this.username = _data["username"];
-            this.email = _data["email"];
-            this.password = _data["password"];
+            this.email = _data["Email"];
+            this.password = _data["Password"];
+            this.role = _data["Role"];
         }
     }
 
@@ -766,11 +641,11 @@ export class SignUpRequest implements ISignUpRequest {
             if (this.hasOwnProperty(property))
                 data[property] = this[property];
         }
-        data["firstName"] = this.firstName;
+        data["FirstName"] = this.firstName;
         data["lastName"] = this.lastName;
-        data["username"] = this.username;
-        data["email"] = this.email;
-        data["password"] = this.password;
+        data["Email"] = this.email;
+        data["Password"] = this.password;
+        data["Role"] = this.role;
         return data;
     }
 }
@@ -781,21 +656,21 @@ export interface ISignUpRequest {
     firstName: string;
     /** Last name */
     lastName: string;
-    /** Username */
-    username: string;
     /** Email */
     email: string;
     /** Password */
     password: string;
+    /** Role */
+    role: number | undefined;
 
     [key: string]: any;
 }
 
-/** Request to sign in */
+/** Request for sign in */
 export class SignInRequest implements ISignInRequest {
-    /** The username */
-    username!: string;
-    /** The password */
+    /** Email */
+    email!: string;
+    /** Password */
     password!: string;
 
     [key: string]: any;
@@ -815,8 +690,8 @@ export class SignInRequest implements ISignInRequest {
                 if (_data.hasOwnProperty(property))
                     this[property] = _data[property];
             }
-            this.username = _data["username"];
-            this.password = _data["password"];
+            this.email = _data["Email"];
+            this.password = _data["Password"];
         }
     }
 
@@ -833,33 +708,36 @@ export class SignInRequest implements ISignInRequest {
             if (this.hasOwnProperty(property))
                 data[property] = this[property];
         }
-        data["username"] = this.username;
-        data["password"] = this.password;
+        data["Email"] = this.email;
+        data["Password"] = this.password;
         return data;
     }
 }
 
-/** Request to sign in */
+/** Request for sign in */
 export interface ISignInRequest {
-    /** The username */
-    username: string;
-    /** The password */
+    /** Email */
+    email: string;
+    /** Password */
     password: string;
 
     [key: string]: any;
 }
 
-export class SignIn implements ISignIn {
-    /** The id of the user */
-    id!: number | undefined;
-    /** The username of the user */
-    username!: string | undefined;
-    /** The email of the user */
-    email!: string | undefined;
+/** object me */
+export class GetMe implements IGetMe {
+    /** First name */
+    firstName!: string;
+    /** Last name */
+    lastName!: string;
+    /** Email */
+    email!: string;
+    /** Role */
+    role!: number | undefined;
 
     [key: string]: any;
 
-    constructor(data?: ISignIn) {
+    constructor(data?: IGetMe) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -874,15 +752,16 @@ export class SignIn implements ISignIn {
                 if (_data.hasOwnProperty(property))
                     this[property] = _data[property];
             }
-            this.id = _data["id"];
-            this.username = _data["username"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
             this.email = _data["email"];
+            this.role = _data["role"];
         }
     }
 
-    static fromJS(data: any): SignIn {
+    static fromJS(data: any): GetMe {
         data = typeof data === 'object' ? data : {};
-        let result = new SignIn();
+        let result = new GetMe();
         result.init(data);
         return result;
     }
@@ -893,36 +772,40 @@ export class SignIn implements ISignIn {
             if (this.hasOwnProperty(property))
                 data[property] = this[property];
         }
-        data["id"] = this.id;
-        data["username"] = this.username;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
         data["email"] = this.email;
+        data["role"] = this.role;
         return data;
     }
 }
 
-export interface ISignIn {
-    /** The id of the user */
-    id: number | undefined;
-    /** The username of the user */
-    username: string | undefined;
-    /** The email of the user */
-    email: string | undefined;
+/** object me */
+export interface IGetMe {
+    /** First name */
+    firstName: string;
+    /** Last name */
+    lastName: string;
+    /** Email */
+    email: string;
+    /** Role */
+    role: number | undefined;
 
     [key: string]: any;
 }
 
-/** Response to sign in */
-export class SignInResponse implements ISignInResponse {
+/** Response for get me */
+export class GetMeResponse implements IGetMeResponse {
     /** success */
-    success!: boolean | undefined;
+    success!: boolean;
     /** statusCode */
     statusCode!: number | undefined;
     /** result */
-    result!: SignIn | undefined;
+    result!: GetMe | undefined;
 
     [key: string]: any;
 
-    constructor(data?: ISignInResponse) {
+    constructor(data?: IGetMeResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -939,13 +822,13 @@ export class SignInResponse implements ISignInResponse {
             }
             this.success = _data["success"];
             this.statusCode = _data["statusCode"];
-            this.result = _data["result"] ? SignIn.fromJS(_data["result"]) : <any>undefined;
+            this.result = _data["result"] ? GetMe.fromJS(_data["result"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): SignInResponse {
+    static fromJS(data: any): GetMeResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new SignInResponse();
+        let result = new GetMeResponse();
         result.init(data);
         return result;
     }
@@ -963,14 +846,14 @@ export class SignInResponse implements ISignInResponse {
     }
 }
 
-/** Response to sign in */
-export interface ISignInResponse {
+/** Response for get me */
+export interface IGetMeResponse {
     /** success */
-    success: boolean | undefined;
+    success: boolean;
     /** statusCode */
     statusCode: number | undefined;
     /** result */
-    result: SignIn | undefined;
+    result: GetMe | undefined;
 
     [key: string]: any;
 }
