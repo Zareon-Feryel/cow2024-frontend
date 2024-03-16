@@ -9,6 +9,7 @@ import RouterKeys from '../../routes/routerKeys.ts';
 import { UserRoles } from '../../services/enum/user-roles.ts';
 import { Switch } from '../../shadcn/components/ui/switch.tsx';
 import { AuthService } from '../../services/services/UsersServices.ts';
+import { Select, SelectTrigger, SelectValue } from '../../shadcn/components/ui/select.tsx';
 
 export default function Register () {
     
@@ -108,6 +109,13 @@ export default function Register () {
 						</div>
 						<Label>
 							Pays
+							<Select onValueChange={setCountry}>
+								<SelectTrigger>
+									<SelectValue placeholder="Pays"/>
+								</SelectTrigger>
+        
+							
+							</Select>
 							<Input onChange={(e) => setCountry(e.target.value)}/>
 						</Label>
 					</>

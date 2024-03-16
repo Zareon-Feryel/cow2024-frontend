@@ -23,12 +23,11 @@ export default function UserManager ({ children }: Readonly<Props>) {
             if (!res.result) return;
             setUser(res.result);
             sessionStorage.setItem(USER_KEY, JSON.stringify(res.result));
-        });
+        })
+        .catch(() => navigate(`/${RouterKeys.Login}`));
     }, [pathname]);
     
     if (user || pathname === `/${RouterKeys.Login}` || pathname === `/${RouterKeys.Register}`) return children;
-    
-    if (window.location.pathname !== `/${RouterKeys.Login}`) navigate(`/${RouterKeys.Login}`);
 }
 
 export function getCurrentUser () {

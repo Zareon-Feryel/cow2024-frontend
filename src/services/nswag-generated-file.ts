@@ -34,8 +34,8 @@ export class MakersRepository extends BaseApi {
      * @param body Set github link request
      * @return success response
      */
-    updateGithubLink(body: SetLinkRequest, cancelToken?: CancelToken): Promise<SuccessResponse> {
-        let url_ = this.baseUrl + "/api/maker/updateGithubLink";
+    updateGithubLink(body: SetLinkRequest, signal?: AbortSignal): Promise<SuccessResponse> {
+        let url_ = this.baseUrl + "/api/makers/updateGithubLink";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -48,7 +48,7 @@ export class MakersRepository extends BaseApi {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
-            cancelToken
+            signal
         };
 
         return this.transformOptions(options_).then(transformedOptions_ => {
@@ -87,6 +87,70 @@ export class MakersRepository extends BaseApi {
         }
         return Promise.resolve<SuccessResponse>(null as any);
     }
+
+    /**
+     * Get makers
+     * @param zipCode (optional) zip code
+     * @param keywords (optional) keywords
+     * @return success response
+     */
+    makers(zipCode: string | undefined, keywords: string | undefined, signal?: AbortSignal): Promise<GetMakersResponse> {
+        let url_ = this.baseUrl + "/api/makers?";
+        if (zipCode === null)
+            throw new Error("The parameter 'zipCode' cannot be null.");
+        else if (zipCode !== undefined)
+            url_ += "zipCode=" + encodeURIComponent("" + zipCode) + "&";
+        if (keywords === null)
+            throw new Error("The parameter 'keywords' cannot be null.");
+        else if (keywords !== undefined)
+            url_ += "keywords=" + encodeURIComponent("" + keywords) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            signal
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processMakers(_response));
+        });
+    }
+
+    protected processMakers(response: AxiosResponse): Promise<GetMakersResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = GetMakersResponse.fromJS(resultData200);
+            return Promise.resolve<GetMakersResponse>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GetMakersResponse>(null as any);
+    }
 }
 
 export class UsersRepository extends BaseApi {
@@ -109,7 +173,7 @@ export class UsersRepository extends BaseApi {
      * @param body Signup request
      * @return success response
      */
-    signup(body: SignUpRequest, cancelToken?: CancelToken): Promise<SignResponse> {
+    signup(body: SignUpRequest, signal?: AbortSignal): Promise<SignResponse> {
         let url_ = this.baseUrl + "/api/users/signup";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -123,7 +187,7 @@ export class UsersRepository extends BaseApi {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
-            cancelToken
+            signal
         };
 
         return this.transformOptions(options_).then(transformedOptions_ => {
@@ -175,7 +239,7 @@ export class UsersRepository extends BaseApi {
      * @param body Signin request
      * @return success response
      */
-    signin(body: SignInRequest, cancelToken?: CancelToken): Promise<SignResponse> {
+    signin(body: SignInRequest, signal?: AbortSignal): Promise<SignResponse> {
         let url_ = this.baseUrl + "/api/users/signin";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -189,7 +253,7 @@ export class UsersRepository extends BaseApi {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
-            cancelToken
+            signal
         };
 
         return this.transformOptions(options_).then(transformedOptions_ => {
@@ -240,7 +304,7 @@ export class UsersRepository extends BaseApi {
      * Get user informations
      * @return success response
      */
-    me( cancelToken?: CancelToken): Promise<GetMeResponse> {
+    me(signal?: AbortSignal): Promise<GetMeResponse> {
         let url_ = this.baseUrl + "/api/users/me";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -250,7 +314,7 @@ export class UsersRepository extends BaseApi {
             headers: {
                 "Accept": "application/json"
             },
-            cancelToken
+            signal
         };
 
         return this.transformOptions(options_).then(transformedOptions_ => {
@@ -301,7 +365,7 @@ export class UsersRepository extends BaseApi {
      * Logout user
      * @return success response
      */
-    logout( cancelToken?: CancelToken): Promise<SuccessResponse> {
+    logout(signal?: AbortSignal): Promise<SuccessResponse> {
         let url_ = this.baseUrl + "/api/users/logout";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -311,7 +375,7 @@ export class UsersRepository extends BaseApi {
             headers: {
                 "Accept": "application/json"
             },
-            cancelToken
+            signal
         };
 
         return this.transformOptions(options_).then(transformedOptions_ => {
@@ -592,6 +656,194 @@ export interface ISetLinkRequest {
     githubLink: string;
     /** link id */
     linkId: number | undefined;
+
+    [key: string]: any;
+}
+
+/** Response for get makers */
+export class GetMakers implements IGetMakers {
+    /** id */
+    id!: number | undefined;
+    /** name */
+    name!: string | undefined;
+    /** email */
+    email!: string | undefined;
+    /** zip code */
+    zipCode!: string | undefined;
+    /** city */
+    city!: string | undefined;
+    /** country */
+    country!: string | undefined;
+    /** images */
+    images!: string[] | undefined;
+    /** keywords */
+    keywords!: string[] | undefined;
+    /** distance */
+    distance!: number | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: IGetMakers) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.email = _data["email"];
+            this.zipCode = _data["zipCode"];
+            this.city = _data["city"];
+            this.country = _data["country"];
+            if (Array.isArray(_data["images"])) {
+                this.images = [] as any;
+                for (let item of _data["images"])
+                    this.images!.push(item);
+            }
+            if (Array.isArray(_data["keywords"])) {
+                this.keywords = [] as any;
+                for (let item of _data["keywords"])
+                    this.keywords!.push(item);
+            }
+            this.distance = _data["distance"];
+        }
+    }
+
+    static fromJS(data: any): GetMakers {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetMakers();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["email"] = this.email;
+        data["zipCode"] = this.zipCode;
+        data["city"] = this.city;
+        data["country"] = this.country;
+        if (Array.isArray(this.images)) {
+            data["images"] = [];
+            for (let item of this.images)
+                data["images"].push(item);
+        }
+        if (Array.isArray(this.keywords)) {
+            data["keywords"] = [];
+            for (let item of this.keywords)
+                data["keywords"].push(item);
+        }
+        data["distance"] = this.distance;
+        return data;
+    }
+}
+
+/** Response for get makers */
+export interface IGetMakers {
+    /** id */
+    id: number | undefined;
+    /** name */
+    name: string | undefined;
+    /** email */
+    email: string | undefined;
+    /** zip code */
+    zipCode: string | undefined;
+    /** city */
+    city: string | undefined;
+    /** country */
+    country: string | undefined;
+    /** images */
+    images: string[] | undefined;
+    /** keywords */
+    keywords: string[] | undefined;
+    /** distance */
+    distance: number | undefined;
+
+    [key: string]: any;
+}
+
+/** Response for get makers response */
+export class GetMakersResponse implements IGetMakersResponse {
+    /** success */
+    success!: boolean;
+    /** statusCode */
+    statusCode!: number | undefined;
+    /** result */
+    result!: GetMakers[] | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: IGetMakersResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.success = _data["success"];
+            this.statusCode = _data["statusCode"];
+            if (Array.isArray(_data["result"])) {
+                this.result = [] as any;
+                for (let item of _data["result"])
+                    this.result!.push(GetMakers.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetMakersResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetMakersResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["success"] = this.success;
+        data["statusCode"] = this.statusCode;
+        if (Array.isArray(this.result)) {
+            data["result"] = [];
+            for (let item of this.result)
+                data["result"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+/** Response for get makers response */
+export interface IGetMakersResponse {
+    /** success */
+    success: boolean;
+    /** statusCode */
+    statusCode: number | undefined;
+    /** result */
+    result: GetMakers[] | undefined;
 
     [key: string]: any;
 }
