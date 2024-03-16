@@ -2,9 +2,10 @@ import { Input } from '../../shadcn/components/ui/input.tsx';
 import { TabsContent } from '../../shadcn/components/ui/tabs.tsx';
 import { Button } from '../../shadcn/components/ui/button.tsx';
 import { Label } from '../../shadcn/components/ui/label.tsx';
-import { SignInRequest, Users } from '../../services/nswag-generated-file.ts';
+import { SignInRequest, UsersRepository } from '../../services/nswag-generated-file.ts';
 import { useEffect, useState } from 'react';
 import { useToast } from '../../shadcn/components/ui/use-toast.ts';
+import RouterKeys from '../../routes/routerKeys.ts';
 
 export default function Login () {
     const [email, setEmail] = useState('');
@@ -27,7 +28,7 @@ export default function Login () {
             password: password,
         });
         
-        new Users().signin(user)
+        new UsersRepository().signin(user)
         .then(() => {})
         .catch(() => toast({
             title: 'Erreur',
@@ -37,7 +38,7 @@ export default function Login () {
     };
     
     return (
-        <TabsContent value="login" className="flex flex-col bg-white gap-4">
+        <TabsContent value={RouterKeys.Login} className="flex flex-col bg-white gap-4">
             <Label>
                 Email
                 <Input onChange={(e) => setEmail(e.target.value)}/>

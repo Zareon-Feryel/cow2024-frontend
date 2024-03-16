@@ -10,8 +10,8 @@ interface Props {
 }
 
 const loginTabs = [
-    { label: 'Connexion', value: 'login' },
-    { label: 'Inscription', value: 'register' },
+    { label: 'Connexion', value: RouterKeys.Login },
+    { label: 'Inscription', value: RouterKeys.Register },
 ];
 
 export default function LoginLayout ({ children }: Readonly<Props>) {

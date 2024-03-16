@@ -14,7 +14,82 @@ import { BaseApi } from "./BaseApi";
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-export class Users extends BaseApi {
+export class MakersRepository extends BaseApi {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        super();
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+
+    }
+
+    /**
+     * Set github link
+     * @param body Set github link request
+     * @return success response
+     */
+    updateGithubLink(body: SetLinkRequest, cancelToken?: CancelToken): Promise<SuccessResponse> {
+        let url_ = this.baseUrl + "/api/maker/updateGithubLink";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "PUT",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processUpdateGithubLink(_response));
+        });
+    }
+
+    protected processUpdateGithubLink(response: AxiosResponse): Promise<SuccessResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = SuccessResponse.fromJS(resultData200);
+            return Promise.resolve<SuccessResponse>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<SuccessResponse>(null as any);
+    }
+}
+
+export class UsersRepository extends BaseApi {
     protected instance: AxiosInstance;
     protected baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -463,6 +538,58 @@ export interface IErrorResponse {
     [key: string]: any;
 }
 
+/** request for set link */
+export class SetLinkRequest implements ISetLinkRequest {
+    /** github link */
+    githubLink!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ISetLinkRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.githubLink = _data["githubLink"];
+        }
+    }
+
+    static fromJS(data: any): SetLinkRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new SetLinkRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["githubLink"] = this.githubLink;
+        return data;
+    }
+}
+
+/** request for set link */
+export interface ISetLinkRequest {
+    /** github link */
+    githubLink: string;
+
+    [key: string]: any;
+}
+
 /** Request for sign up */
 export class SignUpRequest implements ISignUpRequest {
     /** First name */
@@ -473,7 +600,7 @@ export class SignUpRequest implements ISignUpRequest {
     email!: string;
     /** Password */
     password!: string;
-    /** User role */
+    /** Role */
     role!: number | undefined;
 
     [key: string]: any;
@@ -533,7 +660,7 @@ export interface ISignUpRequest {
     email: string;
     /** Password */
     password: string;
-    /** User role */
+    /** Role */
     role: number | undefined;
 
     [key: string]: any;
@@ -605,7 +732,7 @@ export class GetMe implements IGetMe {
     lastName!: string;
     /** Email */
     email!: string;
-    /** User role */
+    /** Role */
     role!: number | undefined;
 
     [key: string]: any;
@@ -661,7 +788,7 @@ export interface IGetMe {
     lastName: string;
     /** Email */
     email: string;
-    /** User role */
+    /** Role */
     role: number | undefined;
 
     [key: string]: any;
