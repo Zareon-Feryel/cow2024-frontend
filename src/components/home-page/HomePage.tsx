@@ -9,7 +9,7 @@ const params = queryString.default.stringify({
 
 export function HomePage() {
 	return (
-		<div className="main-container flex h-full items-center">
+        <div className="main-container flex h-full items-center justify-center">
 			<MainSearchBar />
 			<a href={`https://github.com/login/oauth/authorize?${params}`}>
 				<svg

@@ -5,7 +5,9 @@ export function Layout () {
     return (
         <div className="flex flex-col h-screen bg-gray-100">
             <Header/>
-            <Outlet/>
+            <div className="mt-5 h-full">
+                <Outlet/>
+            </div>
         </div>
     );
 }
