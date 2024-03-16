@@ -1,6 +1,6 @@
 @layer components {
     .container-shadow {
-        @apply bg-white rounded-xl shadow p-2
+        @apply bg-white rounded-xl shadow p-2 border border-gray-100
     }
 
     .main-container {
@@ -9,5 +9,13 @@
 
     .main-title {
         @apply text-4xl font-bold
+    }
+
+    .container-shadow.hover-effect {
+        @apply hover:border-gray-200
+    }
+
+    .hover-effect {
+        @apply transition duration-300 ease-in-out hover:shadow-md cursor-pointer
     }
 }
