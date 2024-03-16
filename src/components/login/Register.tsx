@@ -1,6 +1,6 @@
 import { TabsContent } from '../../shadcn/components/ui/tabs.tsx';
 import { Input } from '../../shadcn/components/ui/input.tsx';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useToast } from '../../shadcn/components/ui/use-toast.ts';
 import { SignUpRequest, UsersRepository } from '../../services/nswag-generated-file.ts';
 import { Label } from '../../shadcn/components/ui/label.tsx';
@@ -30,7 +30,8 @@ export default function Register () {
         setValidForm(email !== '' && password !== '');
     }, [email, password]);
     
-    const handleRegister = () => {
+    const handleRegister = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (email === '' || password === '') {
             return;
         }
@@ -58,8 +59,8 @@ export default function Register () {
     };
     
     return (
-        <TabsContent value={RouterKeys.Register} className="flex flex-col bg-white gap-4">
-            <form onSubmit={handleRegister}>
+        <TabsContent value={RouterKeys.Register}>
+            <form className="flex flex-col bg-white gap-4" onSubmit={handleRegister}>
                 <div className="flex gap-2">
                     <Label>
                         Prénom
@@ -107,7 +108,7 @@ export default function Register () {
                     Pays
                     <Input onChange={(e) => setCountry(e.target.value)}/>
                 </Label>
-                <Button disabled={!validForm} onClick={handleRegister}>{'S\'inscrire'}</Button>
+                <Button disabled={!validForm}>{'S\'inscrire'}</Button>
             </form>
         </TabsContent>
     );

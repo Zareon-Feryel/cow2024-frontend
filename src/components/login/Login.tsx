@@ -3,7 +3,7 @@ import { TabsContent } from '../../shadcn/components/ui/tabs.tsx';
 import { Button } from '../../shadcn/components/ui/button.tsx';
 import { Label } from '../../shadcn/components/ui/label.tsx';
 import { SignInRequest, UsersRepository } from '../../services/nswag-generated-file.ts';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useToast } from '../../shadcn/components/ui/use-toast.ts';
 import RouterKeys from '../../routes/routerKeys.ts';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +21,8 @@ export default function Login () {
         setValidForm(email !== '' && password !== '');
     }, [email, password]);
     
-    const handleLogin = () => {
+    const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (email === '' || password === '') {
             return;
         }
@@ -41,8 +42,8 @@ export default function Login () {
     };
     
     return (
-        <TabsContent value={RouterKeys.Login} className="flex flex-col bg-white gap-4">
-            <form onSubmit={handleLogin}>
+        <TabsContent value={RouterKeys.Login}>
+            <form onSubmit={handleLogin} className="flex flex-col bg-white gap-4">
                 <Label>
                     Email
                     <Input onChange={(e) => setEmail(e.target.value)}/>
