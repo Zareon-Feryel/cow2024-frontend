@@ -28,12 +28,9 @@ export default function SearchResultsPage () {
         <div className="flex flex-col gap-4 container-shadow main-container">
             <SearchBar/>
             {!loading && results?.map((result, index) => (
-                <MakerCard key={getUniqueID(result.id ?? `${index}`, index)} result={result}/>
+                <MakerCard key={getUniqueID(`${result.id ?? index}`, index)} result={result}/>
             ))}
-            
-            {loading && new Array(4).fill('str').map((str, index) => (
-                <MakerCard key={getUniqueID(str, index)} result={{ images: [] }}/>
-            ))}
+            {loading && <div className="flex justify-center items-center h-40">Chargement...</div>}
         </div>
     );
 }

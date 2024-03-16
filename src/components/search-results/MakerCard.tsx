@@ -11,14 +11,11 @@ export function MakerCard ({ result }: Readonly<Props>) {
     const test = 'https://github.com/EloiStree/2024_03_16_UniCraftWalloniaMirrorSample/blob/main/3D%20Mirror/Images/2020_03_10_ArduinoNanoFlatNanoPaint/Arduino%20Nano%20Paint%20Capacitive%20v6.stl.png?raw=true';
     return (
         <div className="container-shadow hover-effect py-5 flex gap-10 relative">
-            <Link to={`/${Paths.Maker}/${result.id}`}
-                  key={result.id}
-                  className="w-full h-full absolute top-0 left-0 "
-            />
+            <Link to={`/${Paths.Maker}/${result.id}`} className="w-full h-full absolute top-0 left-0"/>
             <ImageCarousel images={[test, test, test, test]}/>
             <div className="flex-1 relative text-xl">
                 <div>
-                    <h2>{result.name?.toUpperCase()}</h2>
+                    <h2>{result?.name?.toUpperCase()}</h2>
                     <p>{result.email}</p>
                 </div>
                 <div className="flex absolute right-0 top-0">
