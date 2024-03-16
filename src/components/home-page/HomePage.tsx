@@ -2,14 +2,14 @@ import MainSearchBar from "./MainSearchBar.tsx";
 import * as queryString from "query-string";
 
 const params = queryString.default.stringify({
-	client_id: "3847b6aa61874071e9d9",
+	client_id: import.meta.env.VITE_GITHUB_CLIENT_ID,
 	redirect_uri: "https://cow2024-frontend.vercel.app/account",
 	scope: ["read:user", "user:email"].join(" "), // space seperated string
 });
 
 export function HomePage() {
 	return (
-        <div className="main-container flex h-full items-center justify-center">
+		<div className="main-container flex h-full items-center justify-center">
 			<MainSearchBar />
 			<a href={`https://github.com/login/oauth/authorize?${params}`}>
 				<svg
