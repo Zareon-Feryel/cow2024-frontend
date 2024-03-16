@@ -1,10 +1,11 @@
-function App () {
-    
-    return (
-        <div>
-            <h1>Unicraft</h1>
-        </div>
-    );
-}
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import { RouterProvider } from 'react-router-dom';
+import router from './routes/Router.tsx';
 
-export default App;
+ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+        <RouterProvider router={router}/>
+    </React.StrictMode>,
+);
