@@ -14,7 +14,7 @@ export function MakerPage () {
     
     useEffect(() => {
         const makerIdNumber = Number(makerId);
-        if (!isNaN(makerIdNumber)) return;
+        if (isNaN(makerIdNumber)) return;
         
         new MakersService().makers2(makerIdNumber).then((res) => {
             console.log(res.result);
