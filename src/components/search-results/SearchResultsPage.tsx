@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { SEARCH_PARAMS_KEY, ZIP_CODE_KEY } from '../../constants/constants.ts';
 import { useEffect, useState } from 'react';
 import { MakerCard } from './MakerCard.tsx';
@@ -8,7 +8,7 @@ import { IGetMakers } from '../../services/nswag-generated-file.ts';
 import { getUniqueID } from '../../helpers/getUniquerID.helper.ts';
 
 export default function SearchResultsPage () {
-    
+    const [loading, setLoading] = useState(true);
     const [results, setResults] = useState<IGetMakers[]>();
     const [searchParams] = useSearchParams();
     
@@ -18,15 +18,21 @@ export default function SearchResultsPage () {
         
         if (!searchParam || searchParam?.length === 0 || !zipcodeParam || (zipcodeParam && zipcodeParam.length < 4)) return;
         
+        setLoading(true);
         new MakersService().makers(zipcodeParam, searchParam.replace(' ', ';'))
-        .then((res) => setResults(res.result));
+        .then((res) => setResults(res.result))
+        .finally(() => setLoading(false));
         
     }, [searchParams]);
     return (
         <div className="flex flex-col gap-4 container-shadow main-container">
             <SearchBar/>
-            {results?.map((result, index) => (
+            {!loading && results?.map((result, index) => (
                 <MakerCard key={getUniqueID(result.id, index)} result={result}/>
+            ))}
+            
+            {loading && new Array(4).fill('str').map((str, index) => (
+                <MakerCard key={getUniqueID(str, index)} result={{ images: [] }}/>
             ))}
         </div>
     );
