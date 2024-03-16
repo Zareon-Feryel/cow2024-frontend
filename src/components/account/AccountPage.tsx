@@ -18,10 +18,10 @@ export function AccountPage () {
     };
     
     return (
-        <div className="main-container h-full relative">
+        <div className="main-container h-full relative flex flex-col gap-4">
             <GithubButton/>
             <Button onClick={handleDisconnect}
-                    className="absolute bottom-5 right-0"
+                    className="py-2 px-4 max-w-md flex justify-center items-center text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
                     variant="destructive">Déconnexion</Button>
         </div>
     );

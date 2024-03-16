@@ -4,6 +4,7 @@ enum Paths {
     Account = 'account',
     SearchResults = 'search-results',
     Maker = 'maker',
+    Chat = 'chat',
 }
 
 export default Paths;

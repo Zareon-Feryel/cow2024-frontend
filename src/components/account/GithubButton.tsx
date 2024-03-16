@@ -24,6 +24,14 @@ export default function GithubButton () {
         if (!githubCode) return;
         
         new MakersService().getLinksByCode(githubCode)
+        .then(() => {
+            searchParams.delete(GITHUB_CODE_KEY);
+            return toast({
+                title: 'Succès',
+                description: 'Connexion à GitHub réussie',
+                variant: 'success',
+            });
+        })
         .catch(() => toast({
             title: 'Erreur',
             description: 'Échec de la connexion à GitHub',

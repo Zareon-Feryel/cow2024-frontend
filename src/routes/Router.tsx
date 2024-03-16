@@ -10,6 +10,7 @@ import { AccountPage } from '../components/account/AccountPage.tsx';
 import SearchResultsPage from '../components/search-results/SearchResultsPage.tsx';
 import { MakerPage } from '../components/maker-page/MakerPage.tsx';
 import RouterKeys from './router-keys.ts';
+import { Chat } from '../components/chat/Chat.tsx';
 
 const router = createBrowserRouter([
     {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
             { path: Paths.Account, element: <AccountPage/> },
             { path: Paths.SearchResults, element: <SearchResultsPage/> },
             { path: `${Paths.Maker}/:${RouterKeys.MakerId}`, element: <MakerPage/> },
+            { path: `${Paths.Maker}/:${RouterKeys.MakerId}/${Paths.Chat}`, element: <Chat/> },
         ],
     },
     { path: Paths.Login, element: <LoginLayout><Login/></LoginLayout> },

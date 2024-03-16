@@ -41,14 +41,14 @@ export function SearchBar ({ isMainSearch = false }: Readonly<Props>) {
         <form onSubmit={(e) => handleSearch(e)} className="w-full">
             <div className="flex gap-2">
                 <Label className="flex flex-col">
-                    Code postal
+                    <span className="pl-2">Code postal</span>
                     <Input className="bg-white h-12"
                            placeholder="Code postal"
                            value={zipCode}
                            onChange={(e) => setZipCode(e.target.value)}/>
                 </Label>
                 <Label className="flex flex-col flex-1">
-                    Rechercher par mot-clé, modèle, pièce, etc.
+                    <span className="pl-2">Rechercher par mot-clé, modèle, pièce, etc.</span>
                     <Input onChange={(e) => setSearch(e.target.value)}
                            placeholder="Que souhaitez réparer ?"
                            value={search}
