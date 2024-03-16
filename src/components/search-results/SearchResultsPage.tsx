@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { SEARCH_PARAMS_KEY, ZIP_CODE_KEY } from '../../constants/constants.ts';
 import { useEffect, useState } from 'react';
 import { MakerCard } from './MakerCard.tsx';
@@ -28,7 +28,7 @@ export default function SearchResultsPage () {
         <div className="flex flex-col gap-4 container-shadow main-container">
             <SearchBar/>
             {!loading && results?.map((result, index) => (
-                <MakerCard key={getUniqueID(result.id, index)} result={result}/>
+                <MakerCard key={getUniqueID(result.id ?? `${index}`, index)} result={result}/>
             ))}
             
             {loading && new Array(4).fill('str').map((str, index) => (
