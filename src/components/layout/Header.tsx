@@ -8,7 +8,7 @@ export function Header () {
             <ul>
                 <li>Accueil</li>
             </ul>
-            <div>{user.firstName} {user.lastName}</div>
+            <div>{user?.firstName} {user?.lastName}</div>
         </div>
     );
 }

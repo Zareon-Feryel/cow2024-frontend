@@ -1,7 +1,9 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RouterKeys from '../../routes/routerKeys.ts';
-import { IGetMe, UsersRepository } from '../../services/nswag-generated-file.ts';
+import { IGetMe } from '../../services/nswag-generated-file.ts';
+import { USER_KEY } from '../../constants/constants.ts';
+import { AuthService } from '../../services/services/UsersServices.ts';
 
 interface Props {
     children: ReactNode;
@@ -16,10 +18,11 @@ export default function UserManager ({ children }: Readonly<Props>) {
     useEffect(() => {
         if (user) return;
         
-        new UsersRepository().me()
+        new AuthService(true).me()
         .then((res) => {
             if (!res.result) return;
             setUser(res.result);
+            sessionStorage.setItem(USER_KEY, JSON.stringify(res.result));
         });
     }, [pathname]);
     
@@ -29,14 +32,8 @@ export default function UserManager ({ children }: Readonly<Props>) {
 }
 
 export function getCurrentUser () {
-    // const sessionUser = sessionStorage.getItem(USER_KEY);
-    // const user: IGetMe = sessionUser ? JSON.parse(sessionUser) : null;
-    const user: IGetMe = {
-        email: 'jane_doe@gmail.com',
-        firstName: 'Jane',
-        lastName: 'Doe',
-        role: 0,
-    };
+    const sessionUser = sessionStorage.getItem(USER_KEY);
+    const user: IGetMe = sessionUser ? JSON.parse(sessionUser) : null;
     
     return user;
 }

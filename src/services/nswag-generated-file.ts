@@ -109,7 +109,7 @@ export class UsersRepository extends BaseApi {
      * @param body Signup request
      * @return success response
      */
-    signup(body: SignUpRequest, cancelToken?: CancelToken): Promise<GetMeResponse> {
+    signup(body: SignUpRequest, cancelToken?: CancelToken): Promise<SignResponse> {
         let url_ = this.baseUrl + "/api/users/signup";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -139,7 +139,7 @@ export class UsersRepository extends BaseApi {
         });
     }
 
-    protected processSignup(response: AxiosResponse): Promise<GetMeResponse> {
+    protected processSignup(response: AxiosResponse): Promise<SignResponse> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -153,8 +153,8 @@ export class UsersRepository extends BaseApi {
             const _responseText = response.data;
             let result201: any = null;
             let resultData201  = _responseText;
-            result201 = GetMeResponse.fromJS(resultData201);
-            return Promise.resolve<GetMeResponse>(result201);
+            result201 = SignResponse.fromJS(resultData201);
+            return Promise.resolve<SignResponse>(result201);
 
         } else if (status === 400) {
             const _responseText = response.data;
@@ -167,7 +167,7 @@ export class UsersRepository extends BaseApi {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<GetMeResponse>(null as any);
+        return Promise.resolve<SignResponse>(null as any);
     }
 
     /**
@@ -175,7 +175,7 @@ export class UsersRepository extends BaseApi {
      * @param body Signin request
      * @return success response
      */
-    signin(body: SignInRequest, cancelToken?: CancelToken): Promise<GetMeResponse> {
+    signin(body: SignInRequest, cancelToken?: CancelToken): Promise<SignResponse> {
         let url_ = this.baseUrl + "/api/users/signin";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -205,7 +205,7 @@ export class UsersRepository extends BaseApi {
         });
     }
 
-    protected processSignin(response: AxiosResponse): Promise<GetMeResponse> {
+    protected processSignin(response: AxiosResponse): Promise<SignResponse> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -219,8 +219,8 @@ export class UsersRepository extends BaseApi {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = GetMeResponse.fromJS(resultData200);
-            return Promise.resolve<GetMeResponse>(result200);
+            result200 = SignResponse.fromJS(resultData200);
+            return Promise.resolve<SignResponse>(result200);
 
         } else if (status === 400) {
             const _responseText = response.data;
@@ -233,7 +233,7 @@ export class UsersRepository extends BaseApi {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<GetMeResponse>(null as any);
+        return Promise.resolve<SignResponse>(null as any);
     }
 
     /**
@@ -596,6 +596,146 @@ export interface ISetLinkRequest {
     [key: string]: any;
 }
 
+/** Response for sign */
+export class Sign implements ISign {
+    /** First name */
+    firstName!: string | undefined;
+    /** Last name */
+    lastName!: string | undefined;
+    /** Email */
+    email!: string | undefined;
+    /** role */
+    role!: number | undefined;
+    /** token */
+    token!: string | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: ISign) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.email = _data["email"];
+            this.role = _data["role"];
+            this.token = _data["token"];
+        }
+    }
+
+    static fromJS(data: any): Sign {
+        data = typeof data === 'object' ? data : {};
+        let result = new Sign();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["email"] = this.email;
+        data["role"] = this.role;
+        data["token"] = this.token;
+        return data;
+    }
+}
+
+/** Response for sign */
+export interface ISign {
+    /** First name */
+    firstName: string | undefined;
+    /** Last name */
+    lastName: string | undefined;
+    /** Email */
+    email: string | undefined;
+    /** role */
+    role: number | undefined;
+    /** token */
+    token: string | undefined;
+
+    [key: string]: any;
+}
+
+/** Response for sign response */
+export class SignResponse implements ISignResponse {
+    /** success */
+    success!: boolean;
+    /** statusCode */
+    statusCode!: number | undefined;
+    /** result */
+    result!: Sign | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: ISignResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.success = _data["success"];
+            this.statusCode = _data["statusCode"];
+            this.result = _data["result"] ? Sign.fromJS(_data["result"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): SignResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new SignResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["success"] = this.success;
+        data["statusCode"] = this.statusCode;
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+/** Response for sign response */
+export interface ISignResponse {
+    /** success */
+    success: boolean;
+    /** statusCode */
+    statusCode: number | undefined;
+    /** result */
+    result: Sign | undefined;
+
+    [key: string]: any;
+}
+
 /** Request for sign up */
 export class SignUpRequest implements ISignUpRequest {
     /** First name */
@@ -607,15 +747,15 @@ export class SignUpRequest implements ISignUpRequest {
     /** Password */
     password!: string;
     /** Street */
-    street!: string;
+    street!: string | undefined;
     /** Street number */
-    streetNumber!: string;
+    streetNumber!: string | undefined;
     /** Zip code */
-    zipCode!: string;
+    zipCode!: string | undefined;
     /** City */
-    city!: string;
+    city!: string | undefined;
     /** Country */
-    country!: string;
+    country!: string | undefined;
     /** Role */
     role!: number | undefined;
 
@@ -687,15 +827,15 @@ export interface ISignUpRequest {
     /** Password */
     password: string;
     /** Street */
-    street: string;
+    street: string | undefined;
     /** Street number */
-    streetNumber: string;
+    streetNumber: string | undefined;
     /** Zip code */
-    zipCode: string;
+    zipCode: string | undefined;
     /** City */
-    city: string;
+    city: string | undefined;
     /** Country */
-    country: string;
+    country: string | undefined;
     /** Role */
     role: number | undefined;
 

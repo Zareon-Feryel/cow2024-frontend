@@ -2,11 +2,13 @@ import { Input } from '../../shadcn/components/ui/input.tsx';
 import { TabsContent } from '../../shadcn/components/ui/tabs.tsx';
 import { Button } from '../../shadcn/components/ui/button.tsx';
 import { Label } from '../../shadcn/components/ui/label.tsx';
-import { SignInRequest, UsersRepository } from '../../services/nswag-generated-file.ts';
+import { SignInRequest } from '../../services/nswag-generated-file.ts';
 import { FormEvent, useEffect, useState } from 'react';
 import { useToast } from '../../shadcn/components/ui/use-toast.ts';
 import RouterKeys from '../../routes/routerKeys.ts';
 import { useNavigate } from 'react-router-dom';
+import { BEARER_KEY } from '../../constants/constants.ts';
+import { AuthService } from '../../services/services/UsersServices.ts';
 
 export default function Login () {
     const [email, setEmail] = useState('');
@@ -32,8 +34,12 @@ export default function Login () {
             password: password,
         });
         
-        new UsersRepository().signin(user)
-        .then(() => navigate('/'))
+        new AuthService().signin(user)
+        .then((res) => {
+            if (!res.result?.token) return;
+            sessionStorage.setItem(BEARER_KEY, res.result?.token);
+            navigate('/');
+        })
         .catch(() => toast({
             title: 'Erreur',
             description: 'Les identifiants de connexion sont incorrectes',
