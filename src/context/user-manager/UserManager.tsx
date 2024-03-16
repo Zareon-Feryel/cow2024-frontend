@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function UserManager ({ children }: Readonly<Props>) {
-    const [user, setUser] = useState<IGetMe>(getCurrentSessionUser());
+    const [user, setUser] = useState<IGetMe>(getCurrentUser());
     
     const navigate = useNavigate();
     const pathname = window.location.pathname;
@@ -28,7 +28,7 @@ export default function UserManager ({ children }: Readonly<Props>) {
     if (window.location.pathname !== `/${RouterKeys.Login}`) navigate(`/${RouterKeys.Login}`);
 }
 
-export function getCurrentSessionUser () {
+export function getCurrentUser () {
     // const sessionUser = sessionStorage.getItem(USER_KEY);
     // const user: IGetMe = sessionUser ? JSON.parse(sessionUser) : null;
     const user: IGetMe = {

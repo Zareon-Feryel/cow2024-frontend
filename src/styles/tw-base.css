@@ -1,5 +1,13 @@
 @layer components {
-    .container {
+    .container-shadow {
         @apply bg-white rounded-xl shadow p-2
+    }
+
+    .main-container {
+        @apply px-5 mx-10
+    }
+
+    .main-title {
+        @apply text-4xl font-bold
     }
 }

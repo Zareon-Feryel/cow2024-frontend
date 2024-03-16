@@ -80,34 +80,37 @@ export default function Register () {
                     <Input type="password" onChange={(e) => setPassword(e.target.value)}/>
                 </Label>
                 <div className="flex gap-2">
-                    <Switch onCheckedChange={(e) => setRole(e ? UserRoles.User : UserRoles.Maker)}/>
+                    <Switch onCheckedChange={(e) => setRole(e ? UserRoles.Maker : UserRoles.User)}/>
                     Êtes-vous un particulier ou un Maker ?
                 </div>
-                
-                <div className="flex gap-2">
-                    <Label>
-                        Rue
-                        <Input onChange={(e) => setStreet(e.target.value)}/>
-                    </Label>
-                    <Label>
-                        N°
-                        <Input onChange={(e) => setStreetNumber(e.target.value)}/>
-                    </Label>
-                </div>
-                <div className="flex gap-2">
-                    <Label>
-                        Code postal
-                        <Input onChange={(e) => setZipCode(e.target.value)}/>
-                    </Label>
-                    <Label>
-                        Ville
-                        <Input onChange={(e) => setCity(e.target.value)}/>
-                    </Label>
-                </div>
-                <Label>
-                    Pays
-                    <Input onChange={(e) => setCountry(e.target.value)}/>
-                </Label>
+                {role === UserRoles.Maker &&
+					<>
+						<div className="flex gap-2">
+							<Label>
+								Rue
+								<Input onChange={(e) => setStreet(e.target.value)}/>
+							</Label>
+							<Label>
+								N°
+								<Input onChange={(e) => setStreetNumber(e.target.value)}/>
+							</Label>
+						</div>
+						<div className="flex gap-2">
+							<Label>
+								Code postal
+								<Input onChange={(e) => setZipCode(e.target.value)}/>
+							</Label>
+							<Label>
+								Ville
+								<Input onChange={(e) => setCity(e.target.value)}/>
+							</Label>
+						</div>
+						<Label>
+							Pays
+							<Input onChange={(e) => setCountry(e.target.value)}/>
+						</Label>
+					</>
+                }
                 <Button disabled={!validForm}>{'S\'inscrire'}</Button>
             </form>
         </TabsContent>

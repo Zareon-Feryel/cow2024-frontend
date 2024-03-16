@@ -11,10 +11,10 @@ const router = createBrowserRouter([
     {
         path: '/', element: <UserManager><Layout/></UserManager>, children: [
             { path: '/', element: <HomePage/> },
-            { path: RouterKeys.Login, element: <LoginLayout><Login/></LoginLayout> },
-            { path: RouterKeys.Register, element: <LoginLayout><Register/></LoginLayout> },
         ],
     },
+    { path: RouterKeys.Login, element: <LoginLayout><Login/></LoginLayout> },
+    { path: RouterKeys.Register, element: <LoginLayout><Register/></LoginLayout> },
 ]);
 
 export default router;
