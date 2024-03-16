@@ -18,7 +18,7 @@ export function ImageCarousel ({ images }: Readonly<Props>) {
                 loop: true,
                 align: 'start',
             }}
-            className="w-full max-w-xs"
+            className="w-full z-10 max-w-xs"
         >
             <CarouselContent>
                 {images.map((image, index) => (

@@ -2,7 +2,7 @@ import { ReactNode, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '../../shadcn/components/ui/tabs.tsx';
 import { getUniqueID } from '../../helpers/getUniquerID.helper.ts';
 import { useNavigate } from 'react-router-dom';
-import RouterKeys from '../../routes/routerKeys.ts';
+import Paths from '../../routes/paths.ts';
 import { getPathname } from '../../helpers/url.helper.ts';
 
 interface Props {
@@ -10,8 +10,8 @@ interface Props {
 }
 
 const loginTabs = [
-    { label: 'Connexion', value: RouterKeys.Login },
-    { label: 'Inscription', value: RouterKeys.Register },
+    { label: 'Connexion', value: Paths.Login },
+    { label: 'Inscription', value: Paths.Register },
 ];
 
 export default function LoginLayout ({ children }: Readonly<Props>) {
@@ -22,7 +22,7 @@ export default function LoginLayout ({ children }: Readonly<Props>) {
     const handleChangeTab = (value: string) => {
         setActiveTab(value);
         
-        navigate(value === 'login' ? `/${RouterKeys.Login}` : `/${RouterKeys.Register}`);
+        navigate(value === 'login' ? `/${Paths.Login}` : `/${Paths.Register}`);
     };
     
     return (

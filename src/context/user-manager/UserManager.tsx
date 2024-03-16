@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import RouterKeys from '../../routes/routerKeys.ts';
+import Paths from '../../routes/paths.ts';
 import { IGetMe } from '../../services/nswag-generated-file.ts';
 import { USER_KEY } from '../../constants/constants.ts';
 import { AuthService } from '../../services/services/UsersServices.ts';
@@ -24,10 +24,10 @@ export default function UserManager ({ children }: Readonly<Props>) {
             setUser(res.result);
             sessionStorage.setItem(USER_KEY, JSON.stringify(res.result));
         })
-        .catch(() => navigate(`/${RouterKeys.Login}`));
+        .catch(() => navigate(`/${Paths.Login}`));
     }, [pathname]);
     
-    if (user || pathname === `/${RouterKeys.Login}` || pathname === `/${RouterKeys.Register}`) return children;
+    if (user || pathname === `/${Paths.Login}` || pathname === `/${Paths.Register}`) return children;
 }
 
 export function getCurrentUser () {

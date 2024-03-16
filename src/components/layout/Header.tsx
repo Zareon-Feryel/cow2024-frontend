@@ -2,7 +2,7 @@ import { getCurrentUser } from '../../context/user-manager/UserManager.tsx';
 import { Button } from '../../shadcn/components/ui/button.tsx';
 import { useNavigate } from 'react-router-dom';
 import { getUniqueID } from '../../helpers/getUniquerID.helper.ts';
-import RouterKeys from '../../routes/routerKeys.ts';
+import Paths from '../../routes/paths.ts';
 
 const menu = [
     { label: 'Accueil', path: '/' },
@@ -28,7 +28,7 @@ export function Header () {
                     </li>
                 ))}
             </ul>
-            <Button onClick={() => handleNavigate(RouterKeys.Account)}
+            <Button onClick={() => handleNavigate(Paths.Account)}
                     variant="ghost"
                     className="py-1 px-2 m-0 h-full text-lg">{user?.firstName} {user?.lastName}</Button>
         </div>

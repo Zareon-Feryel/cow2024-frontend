@@ -5,7 +5,7 @@ import { Label } from '../../shadcn/components/ui/label.tsx';
 import { SignInRequest } from '../../services/nswag-generated-file.ts';
 import { FormEvent, useEffect, useState } from 'react';
 import { useToast } from '../../shadcn/components/ui/use-toast.ts';
-import RouterKeys from '../../routes/routerKeys.ts';
+import Paths from '../../routes/paths.ts';
 import { useNavigate } from 'react-router-dom';
 import { BEARER_KEY } from '../../constants/constants.ts';
 import { AuthService } from '../../services/services/UsersServices.ts';
@@ -48,7 +48,7 @@ export default function Login () {
     };
     
     return (
-        <TabsContent value={RouterKeys.Login}>
+        <TabsContent value={Paths.Login}>
             <form onSubmit={handleLogin} className="flex flex-col bg-white gap-4">
                 <Label>
                     Email

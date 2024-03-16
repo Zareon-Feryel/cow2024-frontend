@@ -5,6 +5,7 @@ import { MakerCard } from './MakerCard.tsx';
 import { SearchBar } from './SearchBar.tsx';
 import { MakersService } from '../../services/services/MakersService.ts';
 import { IGetMakers } from '../../services/nswag-generated-file.ts';
+import { getUniqueID } from '../../helpers/getUniquerID.helper.ts';
 
 export default function SearchResultsPage () {
     
@@ -24,8 +25,8 @@ export default function SearchResultsPage () {
     return (
         <div className="flex flex-col gap-4 container-shadow main-container">
             <SearchBar/>
-            {results?.map((result) => (
-                <MakerCard result={result}/>
+            {results?.map((result, index) => (
+                <MakerCard key={getUniqueID(result.id, index)} result={result}/>
             ))}
         </div>
     );

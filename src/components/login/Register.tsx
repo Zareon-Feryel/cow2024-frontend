@@ -5,7 +5,7 @@ import { useToast } from '../../shadcn/components/ui/use-toast.ts';
 import { SignUpRequest } from '../../services/nswag-generated-file.ts';
 import { Label } from '../../shadcn/components/ui/label.tsx';
 import { Button } from '../../shadcn/components/ui/button.tsx';
-import RouterKeys from '../../routes/routerKeys.ts';
+import Paths from '../../routes/paths.ts';
 import { UserRoles } from '../../services/enum/user-roles.ts';
 import { Switch } from '../../shadcn/components/ui/switch.tsx';
 import { AuthService } from '../../services/services/UsersServices.ts';
@@ -61,7 +61,7 @@ export default function Register () {
     };
     
     return (
-        <TabsContent value={RouterKeys.Register}>
+        <TabsContent value={Paths.Register}>
             <form className="flex flex-col bg-white gap-4" onSubmit={handleRegister}>
                 <div className="flex gap-2">
                     <Label>

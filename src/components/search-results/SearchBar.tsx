@@ -2,7 +2,7 @@ import { Input } from '../../shadcn/components/ui/input.tsx';
 import { Button } from '../../shadcn/components/ui/button.tsx';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FormEvent, useEffect, useState } from 'react';
-import RouterKeys from '../../routes/routerKeys.ts';
+import Paths from '../../routes/paths.ts';
 import { SEARCH_PARAMS_KEY, ZIP_CODE_KEY } from '../../constants/constants.ts';
 import { Label } from '@radix-ui/react-label';
 
@@ -31,7 +31,7 @@ export function SearchBar ({ isMainSearch = false }: Readonly<Props>) {
     const handleSearch = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formattedSearch = search.trim().replace(/ /g, '+');
-        navigate(`/${RouterKeys.SearchResults}?${SEARCH_PARAMS_KEY}=${formattedSearch}&${ZIP_CODE_KEY}=${zipCode}`);
+        navigate(`/${Paths.SearchResults}?${SEARCH_PARAMS_KEY}=${formattedSearch}&${ZIP_CODE_KEY}=${zipCode}`);
     };
     
     const mainSearchDisabled = search.length === 0 || zipCode.length < 4;
