@@ -151,6 +151,72 @@ export class MakersRepository extends BaseApi {
         }
         return Promise.resolve<GetMakersResponse>(null as any);
     }
+
+    /**
+     * Get links by code
+     * @param code (optional) code
+     * @return success response
+     */
+    getLinksByCode(code: string | undefined, signal?: AbortSignal): Promise<SuccessResponse> {
+        let url_ = this.baseUrl + "/api/makers/getLinksByCode?";
+        if (code === null)
+            throw new Error("The parameter 'code' cannot be null.");
+        else if (code !== undefined)
+            url_ += "code=" + encodeURIComponent("" + code) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            signal
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processGetLinksByCode(_response));
+        });
+    }
+
+    protected processGetLinksByCode(response: AxiosResponse): Promise<SuccessResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = SuccessResponse.fromJS(resultData200);
+            return Promise.resolve<SuccessResponse>(result200);
+
+        } else if (status === 500) {
+            const _responseText = response.data;
+            let result500: any = null;
+            let resultData500  = _responseText;
+            result500 = ErrorResponse.fromJS(resultData500);
+            return throwException("error response", status, _responseText, _headers, result500);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<SuccessResponse>(null as any);
+    }
 }
 
 export class UsersRepository extends BaseApi {

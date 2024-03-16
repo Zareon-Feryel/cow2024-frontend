@@ -1,7 +1,11 @@
 import * as queryString from 'query-string';
 import { getCurrentUser } from '../../context/user-manager/UserManager';
 import { UserRoles } from '../../services/enum/user-roles.ts';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { GITHUB_CODE_KEY } from '../../constants/constants.ts';
+import { MakersService } from '../../services/services/MakersService.ts';
+import { useToast } from '../../shadcn/components/ui/use-toast.ts';
 
 const params = queryString.default.stringify({
     client_id: import.meta.env.VITE_GITHUB_CLIENT_ID,
@@ -11,6 +15,22 @@ const params = queryString.default.stringify({
 
 export default function GithubButton () {
     const user = getCurrentUser();
+    const [searchParams] = useSearchParams();
+    const toast = useToast();
+    
+    useEffect(() => {
+        const githubCode = searchParams.get(GITHUB_CODE_KEY);
+        
+        if (!githubCode) return;
+        
+        new MakersService().getLinksByCode(githubCode)
+        .catch(() => toast({
+            title: 'Erreur',
+            description: 'Échec de la connexion à GitHub',
+            variant: 'destructive',
+        }));
+        
+    }, [searchParams]);
     
     const githubLink = `https://github.com/login/oauth/authorize?${params}`;
     
