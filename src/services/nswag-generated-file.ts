@@ -542,6 +542,8 @@ export interface IErrorResponse {
 export class SetLinkRequest implements ISetLinkRequest {
     /** github link */
     githubLink!: string;
+    /** link id */
+    linkId!: number | undefined;
 
     [key: string]: any;
 
@@ -561,6 +563,7 @@ export class SetLinkRequest implements ISetLinkRequest {
                     this[property] = _data[property];
             }
             this.githubLink = _data["githubLink"];
+            this.linkId = _data["linkId"];
         }
     }
 
@@ -578,6 +581,7 @@ export class SetLinkRequest implements ISetLinkRequest {
                 data[property] = this[property];
         }
         data["githubLink"] = this.githubLink;
+        data["linkId"] = this.linkId;
         return data;
     }
 }
@@ -586,6 +590,8 @@ export class SetLinkRequest implements ISetLinkRequest {
 export interface ISetLinkRequest {
     /** github link */
     githubLink: string;
+    /** link id */
+    linkId: number | undefined;
 
     [key: string]: any;
 }
@@ -600,6 +606,16 @@ export class SignUpRequest implements ISignUpRequest {
     email!: string;
     /** Password */
     password!: string;
+    /** Street */
+    street!: string;
+    /** Street number */
+    streetNumber!: string;
+    /** Zip code */
+    zipCode!: string;
+    /** City */
+    city!: string;
+    /** Country */
+    country!: string;
     /** Role */
     role!: number | undefined;
 
@@ -624,6 +640,11 @@ export class SignUpRequest implements ISignUpRequest {
             this.lastName = _data["lastName"];
             this.email = _data["Email"];
             this.password = _data["Password"];
+            this.street = _data["Street"];
+            this.streetNumber = _data["StreetNumber"];
+            this.zipCode = _data["ZipCode"];
+            this.city = _data["City"];
+            this.country = _data["Country"];
             this.role = _data["Role"];
         }
     }
@@ -645,6 +666,11 @@ export class SignUpRequest implements ISignUpRequest {
         data["lastName"] = this.lastName;
         data["Email"] = this.email;
         data["Password"] = this.password;
+        data["Street"] = this.street;
+        data["StreetNumber"] = this.streetNumber;
+        data["ZipCode"] = this.zipCode;
+        data["City"] = this.city;
+        data["Country"] = this.country;
         data["Role"] = this.role;
         return data;
     }
@@ -660,6 +686,16 @@ export interface ISignUpRequest {
     email: string;
     /** Password */
     password: string;
+    /** Street */
+    street: string;
+    /** Street number */
+    streetNumber: string;
+    /** Zip code */
+    zipCode: string;
+    /** City */
+    city: string;
+    /** Country */
+    country: string;
     /** Role */
     role: number | undefined;
 
@@ -732,7 +768,7 @@ export class GetMe implements IGetMe {
     lastName!: string;
     /** Email */
     email!: string;
-    /** Role */
+    /** role */
     role!: number | undefined;
 
     [key: string]: any;
@@ -788,7 +824,7 @@ export interface IGetMe {
     lastName: string;
     /** Email */
     email: string;
-    /** Role */
+    /** role */
     role: number | undefined;
 
     [key: string]: any;

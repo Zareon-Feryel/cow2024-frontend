@@ -6,11 +6,14 @@ import { SignInRequest, UsersRepository } from '../../services/nswag-generated-f
 import { useEffect, useState } from 'react';
 import { useToast } from '../../shadcn/components/ui/use-toast.ts';
 import RouterKeys from '../../routes/routerKeys.ts';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login () {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [validForm, setValidForm] = useState(false);
+    
+    const navigate = useNavigate();
     
     const { toast } = useToast();
     
@@ -29,7 +32,7 @@ export default function Login () {
         });
         
         new UsersRepository().signin(user)
-        .then(() => {})
+        .then(() => navigate('/'))
         .catch(() => toast({
             title: 'Erreur',
             description: 'Les identifiants de connexion sont incorrectes',
@@ -39,15 +42,17 @@ export default function Login () {
     
     return (
         <TabsContent value={RouterKeys.Login} className="flex flex-col bg-white gap-4">
-            <Label>
-                Email
-                <Input onChange={(e) => setEmail(e.target.value)}/>
-            </Label>
-            <Label>
-                Mot de passe
-                <Input onChange={(e) => setPassword(e.target.value)}/>
-            </Label>
-            <Button disabled={!validForm} onClick={handleLogin}>Connexion</Button>
+            <form onSubmit={handleLogin}>
+                <Label>
+                    Email
+                    <Input onChange={(e) => setEmail(e.target.value)}/>
+                </Label>
+                <Label>
+                    Mot de passe
+                    <Input type="password" onChange={(e) => setPassword(e.target.value)}/>
+                </Label>
+                <Button type="submit" disabled={!validForm}>Connexion</Button>
+            </form>
         </TabsContent>
     );
 }
