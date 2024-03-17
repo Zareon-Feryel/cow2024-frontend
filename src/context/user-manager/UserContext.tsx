@@ -3,14 +3,11 @@ import { IGetMe } from '../../services/nswag-generated-file.ts';
 import { useLocation } from 'react-router-dom';
 
 interface UserContext {
-    user: IGetMe;
-    setUser: (user: IGetMe) => void;
+    user?: IGetMe;
+    setUser?: (user: IGetMe) => void;
 }
 
-const context: UserContext = createContext({
-    user: {},
-    setUser: () => {},
-});
+const context = createContext<UserContext | undefined>(undefined);
 
 const ContextProvider = context.Provider;
 context.displayName = 'UserContext';

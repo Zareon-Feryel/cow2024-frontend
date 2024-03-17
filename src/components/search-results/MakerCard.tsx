@@ -10,8 +10,6 @@ interface Props {
 export function MakerCard ({ result }: Readonly<Props>) {
     const navigate = useNavigate();
     
-    const test = 'https://github.com/EloiStree/2024_03_16_UniCraftWalloniaMirrorSample/blob/main/3D%20Mirror/Images/2020_03_10_ArduinoNanoFlatNanoPaint/Arduino%20Nano%20Paint%20Capacitive%20v6.stl.png?raw=true';
-    
     const handleNavigate = () => {
         navigate(`/${Paths.Maker}/${result.id}`);
     };

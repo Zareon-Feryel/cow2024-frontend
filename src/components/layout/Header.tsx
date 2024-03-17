@@ -9,7 +9,7 @@ const menu = [
 ];
 
 export function Header () {
-    const { user } = useUserContext();
+    const userCtx = useUserContext();
     const navigate = useNavigate();
     
     const handleNavigate = (path: string) => {
@@ -28,13 +28,13 @@ export function Header () {
                 ))}
             </ul>
             {
-                user ? (
+                userCtx?.user ? (
                     <Button onClick={() => handleNavigate(Paths.Account)}
                             variant="ghost"
                             className="py-1 px-2 m-0 h-full text-lg flex gap-3"
                     >
-                        {user?.email}
-                        <span className="h-10 w-10 bg-red-300 rounded-full flex justify-center items-center text-white">{user?.firstName[0]}{user?.lastName[0]}</span>
+                        {userCtx?.user?.email}
+                        <span className="h-10 w-10 bg-red-300 rounded-full flex justify-center items-center text-white">{userCtx?.user?.firstName[0]}{userCtx?.user?.lastName[0]}</span>
                     </Button>
                 ) : (
                     <div>

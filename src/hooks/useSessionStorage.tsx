@@ -2,8 +2,8 @@
 import React from 'react';
 import { IGetMe } from '../services/nswag-generated-file.ts';
 
-export const useSessionStorage = (keyName: string, defaultValue: any): IGetMe => {
-    const [storedValue, setStoredValue] = React.useState(() => {
+export const useSessionStorage = (keyName: string, defaultValue: any) => {
+    const [storedValue, setStoredValue] = React.useState<IGetMe>(() => {
         try {
             const value = window.sessionStorage.getItem(keyName);
             if (value) {

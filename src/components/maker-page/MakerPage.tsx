@@ -10,7 +10,7 @@ const makerService = new MakersService();
 
 export function MakerPage () {
     const [maker, setMaker] = useState<IGetMaker>();
-    const [projects, setProjects] = useState<IGetMakerImages[]>([]);
+    const [projects, setProjects] = useState<IGetMakerImages>();
     
     const { makerId } = useParams();
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ export function MakerPage () {
         <div className="main-container h-full overflow-y-auto">
             <div className="border-b-2 flex flex-col">
                 <h1 className="main-title">{maker?.name}</h1>
-                <h3 className="self-center">{`Nombre de projet${(maker?.projects && maker.projects.length > 1) ? 's' : ''}: ${maker?.projects?.length ?? '-'}`}</h3>
+                <h3 className="self-center">{`Nombre de projet${(projects?.projects && projects.projects.length > 1) ? 's' : ''}: ${projects?.projects?.length ?? '-'}`}</h3>
                 <div>
                     <h3 className="font-semibold">Coordonnées</h3>
                     <p>{maker?.street}, {maker?.streetNumber}</p>
@@ -46,7 +46,7 @@ export function MakerPage () {
             </div>
             <div>
                 <h2 className="main-title">Projets</h2>
-                {projects['projectImages']?.map((project, index) => (
+                {projects?.projects?.map((project, index) => (
                     <div key={getUniqueID(project?.name ?? 'project', index)}>
                         <h2 className="uppercase font-semibold text-lg">{project.name}</h2>
                         <div className="flex flex-wrap justify-between">

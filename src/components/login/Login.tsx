@@ -10,11 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { BEARER_KEY } from '../../constants/constants.ts';
 import { AuthService } from '../../services/services/UsersServices.ts';
 import { getMe } from '../../context/user-manager/AuthManager.tsx';
-import { useUserContext } from '../../context/user-manager/UserContext.tsx';
 
 export default function Login () {
-    const { setUser } = useUserContext();
-    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [validForm, setValidForm] = useState(false);
@@ -42,7 +39,7 @@ export default function Login () {
         .then((res) => {
             if (!res.result?.token) return;
             sessionStorage.setItem(BEARER_KEY, res.result?.token);
-            getMe().then((res) => setUser(res));
+            getMe();
             navigate('/');
         })
         .catch(() => toast({
