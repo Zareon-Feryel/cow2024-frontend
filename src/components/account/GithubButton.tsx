@@ -1,5 +1,5 @@
 import * as queryString from 'query-string';
-import { getCurrentUser } from '../../context/user-manager/UserManager';
+import { getCurrentUser } from '../../context/user-manager/AuthManager.tsx';
 import { UserRoles } from '../../services/enum/user-roles.ts';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -23,7 +23,7 @@ export default function GithubButton () {
         
         if (!githubCode) return;
         
-        new MakersService().getLinksByCode(githubCode)
+        new MakersService(true).getLinksByCode(githubCode)
         .then(() => {
             searchParams.delete(GITHUB_CODE_KEY);
             return toast({

@@ -24,7 +24,7 @@ export function ImageCarousel ({ images }: Readonly<Props>) {
             }}
             className="w-full z-10 max-w-xs"
         >
-            <CarouselContent>
+            <CarouselContent className="flex">
                 {images.map((image, index) => (
                     <CarouselItem key={getUniqueID(image, index)}>
                         <div className={clsx('h-52 bg-gray-200 rounded-xl skeleton', !loading && 'hidden')}/>
@@ -34,9 +34,15 @@ export function ImageCarousel ({ images }: Readonly<Props>) {
                              alt={image}/>
                     </CarouselItem>
                 ))}
+                {images.length === 0 &&
+					<CarouselItem className="text-center">Aucune image</CarouselItem>}
             </CarouselContent>
-            <CarouselPrevious/>
-            <CarouselNext/>
+            {images.length !== 0 && (
+                <>
+                    <CarouselPrevious/>
+                    <CarouselNext/>
+                </>
+            )}
         </Carousel>
     
     );

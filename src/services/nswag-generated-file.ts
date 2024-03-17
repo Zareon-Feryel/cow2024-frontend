@@ -282,6 +282,71 @@ export class MakersRepository extends BaseApi {
         }
         return Promise.resolve<GetMakerResponse>(null as any);
     }
+
+    /**
+     * Get maker images
+     * @param makerId maker id
+     * @return success response
+     */
+    getMakerImages(makerId: number, signal?: AbortSignal): Promise<GetMakerImagesResponse> {
+        let url_ = this.baseUrl + "/api/makers/getMakerImages/{makerId}";
+        if (makerId === undefined || makerId === null)
+            throw new Error("The parameter 'makerId' must be defined.");
+        url_ = url_.replace("{makerId}", encodeURIComponent("" + makerId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            signal
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processGetMakerImages(_response));
+        });
+    }
+
+    protected processGetMakerImages(response: AxiosResponse): Promise<GetMakerImagesResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = GetMakerImagesResponse.fromJS(resultData200);
+            return Promise.resolve<GetMakerImagesResponse>(result200);
+
+        } else if (status === 500) {
+            const _responseText = response.data;
+            let result500: any = null;
+            let resultData500  = _responseText;
+            result500 = ErrorResponse.fromJS(resultData500);
+            return throwException("error response", status, _responseText, _headers, result500);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GetMakerImagesResponse>(null as any);
+    }
 }
 
 export class UsersRepository extends BaseApi {
@@ -994,8 +1059,6 @@ export class GetMaker implements IGetMaker {
     city!: string | undefined;
     /** country */
     country!: string | undefined;
-    /** projects */
-    projects!: Project[] | undefined;
 
     [key: string]: any;
 
@@ -1022,11 +1085,6 @@ export class GetMaker implements IGetMaker {
             this.streetNumber = _data["streetNumber"];
             this.city = _data["city"];
             this.country = _data["country"];
-            if (Array.isArray(_data["projects"])) {
-                this.projects = [] as any;
-                for (let item of _data["projects"])
-                    this.projects!.push(Project.fromJS(item));
-            }
         }
     }
 
@@ -1051,11 +1109,6 @@ export class GetMaker implements IGetMaker {
         data["streetNumber"] = this.streetNumber;
         data["city"] = this.city;
         data["country"] = this.country;
-        if (Array.isArray(this.projects)) {
-            data["projects"] = [];
-            for (let item of this.projects)
-                data["projects"].push(item.toJSON());
-        }
         return data;
     }
 }
@@ -1077,8 +1130,70 @@ export interface IGetMaker {
     city: string | undefined;
     /** country */
     country: string | undefined;
-    /** projects */
-    projects: Project[] | undefined;
+
+    [key: string]: any;
+}
+
+/** Response for get maker response */
+export class GetMakerResponse implements IGetMakerResponse {
+    /** success */
+    success!: boolean;
+    /** statusCode */
+    statusCode!: number | undefined;
+    /** result */
+    result!: GetMaker | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: IGetMakerResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.success = _data["success"];
+            this.statusCode = _data["statusCode"];
+            this.result = _data["result"] ? GetMaker.fromJS(_data["result"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetMakerResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetMakerResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["success"] = this.success;
+        data["statusCode"] = this.statusCode;
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+/** Response for get maker response */
+export interface IGetMakerResponse {
+    /** success */
+    success: boolean;
+    /** statusCode */
+    statusCode: number | undefined;
+    /** result */
+    result: GetMaker | undefined;
 
     [key: string]: any;
 }
@@ -1155,18 +1270,96 @@ export interface IProject {
     [key: string]: any;
 }
 
-/** Response for get maker response */
-export class GetMakerResponse implements IGetMakerResponse {
+/** Response for get maker image */
+export class GetMakerImages implements IGetMakerImages {
+    /** sizesList */
+    sizesList!: string[];
+    /** projects */
+    projects!: Project[];
+
+    [key: string]: any;
+
+    constructor(data?: IGetMakerImages) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.sizesList = [];
+            this.projects = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["sizesList"])) {
+                this.sizesList = [] as any;
+                for (let item of _data["sizesList"])
+                    this.sizesList!.push(item);
+            }
+            if (Array.isArray(_data["projects"])) {
+                this.projects = [] as any;
+                for (let item of _data["projects"])
+                    this.projects!.push(Project.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetMakerImages {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetMakerImages();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.sizesList)) {
+            data["sizesList"] = [];
+            for (let item of this.sizesList)
+                data["sizesList"].push(item);
+        }
+        if (Array.isArray(this.projects)) {
+            data["projects"] = [];
+            for (let item of this.projects)
+                data["projects"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+/** Response for get maker image */
+export interface IGetMakerImages {
+    /** sizesList */
+    sizesList: string[];
+    /** projects */
+    projects: Project[];
+
+    [key: string]: any;
+}
+
+/** Response for get maker image */
+export class GetMakerImagesResponse implements IGetMakerImagesResponse {
     /** success */
     success!: boolean;
     /** statusCode */
     statusCode!: number | undefined;
     /** result */
-    result!: GetMaker | undefined;
+    result!: GetMakerImages | undefined;
 
     [key: string]: any;
 
-    constructor(data?: IGetMakerResponse) {
+    constructor(data?: IGetMakerImagesResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1183,13 +1376,13 @@ export class GetMakerResponse implements IGetMakerResponse {
             }
             this.success = _data["success"];
             this.statusCode = _data["statusCode"];
-            this.result = _data["result"] ? GetMaker.fromJS(_data["result"]) : <any>undefined;
+            this.result = _data["result"] ? GetMakerImages.fromJS(_data["result"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): GetMakerResponse {
+    static fromJS(data: any): GetMakerImagesResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new GetMakerResponse();
+        let result = new GetMakerImagesResponse();
         result.init(data);
         return result;
     }
@@ -1207,14 +1400,14 @@ export class GetMakerResponse implements IGetMakerResponse {
     }
 }
 
-/** Response for get maker response */
-export interface IGetMakerResponse {
+/** Response for get maker image */
+export interface IGetMakerImagesResponse {
     /** success */
     success: boolean;
     /** statusCode */
     statusCode: number | undefined;
     /** result */
-    result: GetMaker | undefined;
+    result: GetMakerImages | undefined;
 
     [key: string]: any;
 }

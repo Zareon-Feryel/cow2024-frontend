@@ -4,6 +4,7 @@ import { getUniqueID } from '../../helpers/getUniquerID.helper.ts';
 import { useNavigate } from 'react-router-dom';
 import Paths from '../../routes/paths.ts';
 import { getPathname } from '../../helpers/url.helper.ts';
+import { UserContext } from '../../context/user-manager/UserContext.tsx';
 
 interface Props {
     children: ReactNode;
@@ -26,23 +27,25 @@ export default function LoginLayout ({ children }: Readonly<Props>) {
     };
     
     return (
-        <div className="flex h-screen bg-gray-100 justify-center items-center">
-            <div>
-                <h1 className="w-full text-center mb-5 text-3xl font-semibold">Unicraft</h1>
-                <Tabs value={activeTab} className="w-[400px] container-shadow">
-                    <TabsList className="flex">
-                        {loginTabs.map((tab, index) => (
-                            <TabsTrigger onClick={() => handleChangeTab(tab.value)}
-                                         value={tab.value}
-                                         className="flex-1"
-                                         key={getUniqueID(tab.value, index)}>
-                                {tab.label}
-                            </TabsTrigger>
-                        ))}
-                    </TabsList>
-                    {children}
-                </Tabs>
+        <UserContext>
+            <div className="flex h-screen bg-gray-100 justify-center items-center">
+                <div>
+                    <h1 className="w-full text-center mb-5 text-3xl font-semibold">🦄 Unicraft 🛠</h1>
+                    <Tabs value={activeTab} className="w-[400px] container-shadow">
+                        <TabsList className="flex">
+                            {loginTabs.map((tab, index) => (
+                                <TabsTrigger onClick={() => handleChangeTab(tab.value)}
+                                             value={tab.value}
+                                             className="flex-1"
+                                             key={getUniqueID(tab.value, index)}>
+                                    {tab.label}
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                        {children}
+                    </Tabs>
+                </div>
             </div>
-        </div>
+        </UserContext>
     );
 }

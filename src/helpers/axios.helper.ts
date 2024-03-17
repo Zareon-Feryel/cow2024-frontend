@@ -3,9 +3,8 @@ import { BEARER_KEY } from '../constants/constants.ts';
 
 const defaultAuthAxiosInstance: AxiosInstance = axios.create();
 
-export function getDefaultAxiosInstance(): AxiosInstance
-{
-    const defaultAxiosInstance =  axios.create();
+export function getDefaultAxiosInstance (): AxiosInstance {
+    const defaultAxiosInstance = axios.create();
     
     defaultAxiosInstance.interceptors.response.use(function (response) {
         return response;
