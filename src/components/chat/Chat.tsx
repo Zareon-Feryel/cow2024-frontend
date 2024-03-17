@@ -1,17 +1,14 @@
 import { ChatBox } from "./ChatBox.tsx";
 import { MessagesBox } from "./MessagesBox.tsx";
-import { Message } from "./Message.tsx";
+import { IMessages, Message } from "./Message.tsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ChatsService } from "../../services/services/ChatsServices.ts";
-import {
-	IMessagesResponse,
-	SendMessageRequest,
-} from "../../services/nswag-generated-file.ts";
+import { SendMessageRequest } from "../../services/nswag-generated-file.ts";
 
 export function Chat() {
 	const navigate = useNavigate();
-	const [messages, setMessages] = useState<IMessagesResponse[]>([]);
+	const [messages, setMessages] = useState<IMessages[]>([]);
 	const [chatId, setChatId] = useState<number | null>(null);
 	const params = useParams();
 	const { makerId } = params;

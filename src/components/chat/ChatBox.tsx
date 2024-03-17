@@ -1,6 +1,6 @@
 import { Textarea } from "../../shadcn/components/ui/textarea.tsx";
 import { Button } from "../../shadcn/components/ui/button.tsx";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 interface Props {
 	sendMessage: (message: string) => void;

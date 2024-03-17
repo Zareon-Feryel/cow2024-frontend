@@ -2,11 +2,11 @@ import { clsx } from "clsx";
 import { IMessagesResponse } from "../../services/nswag-generated-file";
 
 interface Props {
-	message: IMessages;
+	message: IMessagesResponse;
 }
 
-interface IMessages extends IMessagesResponse {
-	isSending: boolean;
+export interface IMessages extends IMessagesResponse {
+	isSending?: boolean;
 }
 
 export function Message({ message }: Readonly<Props>) {
