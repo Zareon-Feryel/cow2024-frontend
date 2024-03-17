@@ -34,7 +34,7 @@ export class ChatsRepository extends BaseApi {
      * @param makerId (optional) makerId
      * @return success response
      */
-    messagesGET(makerId: number | undefined, signal?: AbortSignal): Promise<GetMessagesResponse> {
+    messages(makerId: number | undefined, signal?: AbortSignal): Promise<GetMessagesResponse> {
         let url_ = this.baseUrl + "/api/chats/messages?";
         if (makerId === null)
             throw new Error("The parameter 'makerId' cannot be null.");
@@ -60,11 +60,11 @@ export class ChatsRepository extends BaseApi {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processMessagesGET(_response));
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processMessages(_response));
         });
     }
 
-    protected processMessagesGET(response: AxiosResponse): Promise<GetMessagesResponse> {
+    protected processMessages(response: AxiosResponse): Promise<GetMessagesResponse> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -97,11 +97,15 @@ export class ChatsRepository extends BaseApi {
 
     /**
      * Send message
+     * @param chatId chatId
      * @param body Send message request
      * @return success response
      */
-    messagesPOST(body: SendMessageRequest, signal?: AbortSignal): Promise<SuccessResponse> {
-        let url_ = this.baseUrl + "/api/chats/:chatId/messages";
+    messagesAll(chatId: number, body: SendMessageRequest, signal?: AbortSignal): Promise<MessagesResponse[]> {
+        let url_ = this.baseUrl + "/api/chats/{chatId}/messages";
+        if (chatId === undefined || chatId === null)
+            throw new Error("The parameter 'chatId' must be defined.");
+        url_ = url_.replace("{chatId}", encodeURIComponent("" + chatId));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -126,11 +130,11 @@ export class ChatsRepository extends BaseApi {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processMessagesPOST(_response));
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processMessagesAll(_response));
         });
     }
 
-    protected processMessagesPOST(response: AxiosResponse): Promise<SuccessResponse> {
+    protected processMessagesAll(response: AxiosResponse): Promise<MessagesResponse[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -144,8 +148,15 @@ export class ChatsRepository extends BaseApi {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = SuccessResponse.fromJS(resultData200);
-            return Promise.resolve<SuccessResponse>(result200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(MessagesResponse.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return Promise.resolve<MessagesResponse[]>(result200);
 
         } else if (status === 404) {
             const _responseText = response.data;
@@ -158,7 +169,7 @@ export class ChatsRepository extends BaseApi {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<SuccessResponse>(null as any);
+        return Promise.resolve<MessagesResponse[]>(null as any);
     }
 }
 
@@ -1012,8 +1023,8 @@ export interface IErrorResponse {
     [key: string]: any;
 }
 
-/** messages response */
-export class GetMessagesResponse implements IGetMessagesResponse {
+/** list of messages response */
+export class MessagesResponse implements IMessagesResponse {
     /** id */
     id!: number;
     /** senderId */
@@ -1027,7 +1038,7 @@ export class GetMessagesResponse implements IGetMessagesResponse {
 
     [key: string]: any;
 
-    constructor(data?: IGetMessagesResponse) {
+    constructor(data?: IMessagesResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1050,9 +1061,9 @@ export class GetMessagesResponse implements IGetMessagesResponse {
         }
     }
 
-    static fromJS(data: any): GetMessagesResponse {
+    static fromJS(data: any): MessagesResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new GetMessagesResponse();
+        let result = new MessagesResponse();
         result.init(data);
         return result;
     }
@@ -1072,8 +1083,8 @@ export class GetMessagesResponse implements IGetMessagesResponse {
     }
 }
 
-/** messages response */
-export interface IGetMessagesResponse {
+/** list of messages response */
+export interface IMessagesResponse {
     /** id */
     id: number;
     /** senderId */
@@ -1088,10 +1099,77 @@ export interface IGetMessagesResponse {
     [key: string]: any;
 }
 
+/** messages response */
+export class GetMessagesResponse implements IGetMessagesResponse {
+    /** chatId */
+    chatId!: number;
+    /** messages */
+    messages!: MessagesResponse[];
+
+    [key: string]: any;
+
+    constructor(data?: IGetMessagesResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.messages = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.chatId = _data["chatId"];
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(MessagesResponse.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetMessagesResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetMessagesResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["chatId"] = this.chatId;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+/** messages response */
+export interface IGetMessagesResponse {
+    /** chatId */
+    chatId: number;
+    /** messages */
+    messages: MessagesResponse[];
+
+    [key: string]: any;
+}
+
 /** Request for send message */
 export class SendMessageRequest implements ISendMessageRequest {
-    /** senderId */
-    senderId!: number;
     /** message */
     message!: string;
 
@@ -1112,7 +1190,6 @@ export class SendMessageRequest implements ISendMessageRequest {
                 if (_data.hasOwnProperty(property))
                     this[property] = _data[property];
             }
-            this.senderId = _data["senderId"];
             this.message = _data["message"];
         }
     }
@@ -1130,7 +1207,6 @@ export class SendMessageRequest implements ISendMessageRequest {
             if (this.hasOwnProperty(property))
                 data[property] = this[property];
         }
-        data["senderId"] = this.senderId;
         data["message"] = this.message;
         return data;
     }
@@ -1138,8 +1214,6 @@ export class SendMessageRequest implements ISendMessageRequest {
 
 /** Request for send message */
 export interface ISendMessageRequest {
-    /** senderId */
-    senderId: number;
     /** message */
     message: string;
 
