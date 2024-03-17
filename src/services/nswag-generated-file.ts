@@ -14,6 +14,154 @@ import { BaseApi } from "./BaseApi";
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
+export class ChatsRepository extends BaseApi {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        super();
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? this.getBaseUrl("");
+
+    }
+
+    /**
+     * Get messages
+     * @param makerId (optional) makerId
+     * @return success response
+     */
+    messagesGET(makerId: number | undefined, signal?: AbortSignal): Promise<GetMessagesResponse> {
+        let url_ = this.baseUrl + "/api/chats/messages?";
+        if (makerId === null)
+            throw new Error("The parameter 'makerId' cannot be null.");
+        else if (makerId !== undefined)
+            url_ += "makerId=" + encodeURIComponent("" + makerId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            signal
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processMessagesGET(_response));
+        });
+    }
+
+    protected processMessagesGET(response: AxiosResponse): Promise<GetMessagesResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = GetMessagesResponse.fromJS(resultData200);
+            return Promise.resolve<GetMessagesResponse>(result200);
+
+        } else if (status === 404) {
+            const _responseText = response.data;
+            let result404: any = null;
+            let resultData404  = _responseText;
+            result404 = ErrorResponse.fromJS(resultData404);
+            return throwException("chat not found", status, _responseText, _headers, result404);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GetMessagesResponse>(null as any);
+    }
+
+    /**
+     * Send message
+     * @param body Send message request
+     * @return success response
+     */
+    messagesPOST(body: SendMessageRequest, signal?: AbortSignal): Promise<SuccessResponse> {
+        let url_ = this.baseUrl + "/api/chats/:chatId/messages";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            signal
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processMessagesPOST(_response));
+        });
+    }
+
+    protected processMessagesPOST(response: AxiosResponse): Promise<SuccessResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = SuccessResponse.fromJS(resultData200);
+            return Promise.resolve<SuccessResponse>(result200);
+
+        } else if (status === 404) {
+            const _responseText = response.data;
+            let result404: any = null;
+            let resultData404  = _responseText;
+            result404 = ErrorResponse.fromJS(resultData404);
+            return throwException("chat not found", status, _responseText, _headers, result404);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<SuccessResponse>(null as any);
+    }
+}
+
 export class MakersRepository extends BaseApi {
     protected instance: AxiosInstance;
     protected baseUrl: string;
@@ -150,6 +298,72 @@ export class MakersRepository extends BaseApi {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<GetMakersResponse>(null as any);
+    }
+
+    /**
+     * Get makers by name
+     * @param searchString (optional) search string
+     * @return success response
+     */
+    getMakersByName(searchString: string | undefined, signal?: AbortSignal): Promise<GetMakersByNameResponse[]> {
+        let url_ = this.baseUrl + "/api/makers/getMakersByName?";
+        if (searchString === null)
+            throw new Error("The parameter 'searchString' cannot be null.");
+        else if (searchString !== undefined)
+            url_ += "searchString=" + encodeURIComponent("" + searchString) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            signal
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processGetMakersByName(_response));
+        });
+    }
+
+    protected processGetMakersByName(response: AxiosResponse): Promise<GetMakersByNameResponse[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(GetMakersByNameResponse.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return Promise.resolve<GetMakersByNameResponse[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<GetMakersByNameResponse[]>(null as any);
     }
 
     /**
@@ -798,6 +1012,140 @@ export interface IErrorResponse {
     [key: string]: any;
 }
 
+/** messages response */
+export class GetMessagesResponse implements IGetMessagesResponse {
+    /** id */
+    id!: number;
+    /** senderId */
+    senderId!: number;
+    /** chatId */
+    chatId!: number;
+    /** message */
+    message!: string;
+    /** isMine */
+    isMine!: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IGetMessagesResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.senderId = _data["senderId"];
+            this.chatId = _data["chatId"];
+            this.message = _data["message"];
+            this.isMine = _data["isMine"];
+        }
+    }
+
+    static fromJS(data: any): GetMessagesResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetMessagesResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["senderId"] = this.senderId;
+        data["chatId"] = this.chatId;
+        data["message"] = this.message;
+        data["isMine"] = this.isMine;
+        return data;
+    }
+}
+
+/** messages response */
+export interface IGetMessagesResponse {
+    /** id */
+    id: number;
+    /** senderId */
+    senderId: number;
+    /** chatId */
+    chatId: number;
+    /** message */
+    message: string;
+    /** isMine */
+    isMine: boolean;
+
+    [key: string]: any;
+}
+
+/** Request for send message */
+export class SendMessageRequest implements ISendMessageRequest {
+    /** senderId */
+    senderId!: number;
+    /** message */
+    message!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ISendMessageRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.senderId = _data["senderId"];
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): SendMessageRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new SendMessageRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["senderId"] = this.senderId;
+        data["message"] = this.message;
+        return data;
+    }
+}
+
+/** Request for send message */
+export interface ISendMessageRequest {
+    /** senderId */
+    senderId: number;
+    /** message */
+    message: string;
+
+    [key: string]: any;
+}
+
 /** request for set link */
 export class SetLinkRequest implements ISetLinkRequest {
     /** github link */
@@ -1042,6 +1390,86 @@ export interface IGetMakersResponse {
     [key: string]: any;
 }
 
+/** Response for get makers by name */
+export class GetMakersByNameResponse implements IGetMakersByNameResponse {
+    /** id */
+    id!: number;
+    name!: string | undefined;
+    /** email */
+    email!: string | undefined;
+    /** zip code */
+    zipCode!: string | undefined;
+    /** city */
+    city!: string | undefined;
+    /** countryz */
+    country!: string | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: IGetMakersByNameResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.email = _data["email"];
+            this.zipCode = _data["zipCode"];
+            this.city = _data["city"];
+            this.country = _data["country"];
+        }
+    }
+
+    static fromJS(data: any): GetMakersByNameResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetMakersByNameResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["email"] = this.email;
+        data["zipCode"] = this.zipCode;
+        data["city"] = this.city;
+        data["country"] = this.country;
+        return data;
+    }
+}
+
+/** Response for get makers by name */
+export interface IGetMakersByNameResponse {
+    /** id */
+    id: number;
+    name: string | undefined;
+    /** email */
+    email: string | undefined;
+    /** zip code */
+    zipCode: string | undefined;
+    /** city */
+    city: string | undefined;
+    /** countryz */
+    country: string | undefined;
+
+    [key: string]: any;
+}
+
 /** Response for get maker */
 export class GetMaker implements IGetMaker {
     /** id */
@@ -1275,7 +1703,7 @@ export class GetMakerImages implements IGetMakerImages {
     /** sizesList */
     sizesList!: string[];
     /** projects */
-    projects!: Project[];
+    projectImages!: Project[];
 
     [key: string]: any;
 
@@ -1288,7 +1716,7 @@ export class GetMakerImages implements IGetMakerImages {
         }
         if (!data) {
             this.sizesList = [];
-            this.projects = [];
+            this.projectImages = [];
         }
     }
 
@@ -1303,10 +1731,10 @@ export class GetMakerImages implements IGetMakerImages {
                 for (let item of _data["sizesList"])
                     this.sizesList!.push(item);
             }
-            if (Array.isArray(_data["projects"])) {
-                this.projects = [] as any;
-                for (let item of _data["projects"])
-                    this.projects!.push(Project.fromJS(item));
+            if (Array.isArray(_data["projectImages"])) {
+                this.projectImages = [] as any;
+                for (let item of _data["projectImages"])
+                    this.projectImages!.push(Project.fromJS(item));
             }
         }
     }
@@ -1329,10 +1757,10 @@ export class GetMakerImages implements IGetMakerImages {
             for (let item of this.sizesList)
                 data["sizesList"].push(item);
         }
-        if (Array.isArray(this.projects)) {
-            data["projects"] = [];
-            for (let item of this.projects)
-                data["projects"].push(item.toJSON());
+        if (Array.isArray(this.projectImages)) {
+            data["projectImages"] = [];
+            for (let item of this.projectImages)
+                data["projectImages"].push(item.toJSON());
         }
         return data;
     }
@@ -1343,7 +1771,7 @@ export interface IGetMakerImages {
     /** sizesList */
     sizesList: string[];
     /** projects */
-    projects: Project[];
+    projectImages: Project[];
 
     [key: string]: any;
 }
