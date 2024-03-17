@@ -26,7 +26,7 @@ export function MakerPage () {
         <div className="main-container h-full">
             <div className="border-b-2 flex flex-col">
                 <h1 className="main-title">{maker?.name}</h1>
-                <h3 className="self-center">{`Nombre de projet${(maker?.projects && maker.projects.length > 1) ? 's' : ''}: ${maker?.projects?.length}`}</h3>
+                <h3 className="self-center">{`Nombre de projet${(maker?.projects && maker.projects.length > 1) ? 's' : ''}: ${maker?.projects?.length ?? '-'}`}</h3>
                 <div>
                     <h3 className="font-semibold">Coordonnées</h3>
                     <p>{maker?.street}, {maker?.streetNumber}</p>
